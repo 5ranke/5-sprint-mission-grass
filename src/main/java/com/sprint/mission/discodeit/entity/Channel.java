@@ -2,13 +2,14 @@ package com.sprint.mission.discodeit.entity;
 
 import java.util.UUID;
 
-public class User {
+public class Channel {
     private final UUID id;
     private final Long createdAt;
     private Long updatedAt;
     private String name;
+    private User[] Members;
 
-    public User(String name) {
+    public Channel(String name) {
         this.id = UUID.randomUUID();
         this.createdAt = System.currentTimeMillis();
         this.updatedAt = createdAt;
@@ -31,6 +32,10 @@ public class User {
         return name;
     }
 
+    public User[] getMembers() {
+        return Members;
+    }
+
     private void update() {
         this.updatedAt = System.currentTimeMillis();
     }
@@ -39,5 +44,4 @@ public class User {
         this.name = newName;
         update();
     }
-
 }

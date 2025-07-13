@@ -2,17 +2,21 @@ package com.sprint.mission.discodeit.entity;
 
 import java.util.UUID;
 
-public class User {
+public class Message {
     private final UUID id;
     private final Long createdAt;
     private Long updatedAt;
-    private String name;
+    private final User author;
+    private final Channel channel;
+    private String content;
 
-    public User(String name) {
+    public Message(User author, Channel channel, String content) {
         this.id = UUID.randomUUID();
         this.createdAt = System.currentTimeMillis();
         this.updatedAt = createdAt;
-        this.name = name;
+        this.author = author;
+        this.channel = channel;
+        this.content = content;
     }
 
     public UUID getId() {
@@ -27,17 +31,24 @@ public class User {
         return updatedAt;
     }
 
-    public String getName() {
-        return name;
+    public String getContent() {
+        return content;
+    }
+
+    public User getAuthor() {
+        return author;
+    }
+
+    public Channel getChannel() {
+        return channel;
     }
 
     private void update() {
         this.updatedAt = System.currentTimeMillis();
     }
 
-    public void updateName(String newName) {
-        this.name = newName;
+    public void updateContent(String newContent) {
+        this.content = newContent;
         update();
     }
-
 }
