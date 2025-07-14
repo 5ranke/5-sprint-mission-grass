@@ -1,14 +1,14 @@
 package com.sprint.mission.discodeit.service.jcf;
 
-import com.sprint.mission.discodeit.entity.Channel;
+import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.entity.User;
+import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.service.ChannelService;
 
 import java.util.*;
 
 public class JCFChannelService implements ChannelService {
     private final Map<UUID, Channel> data;
-
 
     public JCFChannelService() {
         this.data = new HashMap<>();
@@ -17,6 +17,7 @@ public class JCFChannelService implements ChannelService {
     @Override
     public void create(Channel channel) {
         data.put(channel.getId(), channel);
+        System.out.println(channel+"채널이 생성되었습니다");
     }
 
     @Override
@@ -46,7 +47,17 @@ public class JCFChannelService implements ChannelService {
     }
 
     @Override
-    public void removeMember(UUID channelId, UUID userId) {
-        data.get(channelId).removeMember(userId);
+    public void removeMember(UUID channelId, UUID memberId) {
+        data.get(channelId).removeMember(memberId);
+    }
+
+    @Override
+    public void addMessage(UUID channelId, Message message) {
+        data.get(channelId).addMessage(message);
+    }
+
+    @Override
+    public void removeMessage(UUID channelId, UUID messageId) {
+        data.get(channelId).removeMessage(messageId);
     }
 }

@@ -9,14 +9,16 @@ public class Channel {
     private final Long createdAt;
     private Long updatedAt;
     private String name;
-    private List<User> Members;
+    private List<User> members;
+    private List<Message> messages;
 
     public Channel(String name) {
         this.id = UUID.randomUUID();
         this.createdAt = System.currentTimeMillis();
         this.updatedAt = createdAt;
         this.name = name;
-        this.Members = new ArrayList<>();
+        this.members = new ArrayList<>();
+        this.messages = new ArrayList<>();
     }
 
     public UUID getId() {
@@ -36,7 +38,11 @@ public class Channel {
     }
 
     public List<User> getMembers() {
-        return Members;
+        return members;
+    }
+
+    public List<Message> getMessages() {
+        return messages;
     }
 
     private void update() {
@@ -48,17 +54,21 @@ public class Channel {
         update();
     }
 
-    public void addMember(User user){
-        this.Members.add(user);
+    public void addMember(User user) {
+        this.members.add(user);
     }
 
-    public void removeMember(UUID id){
-        for (User member : Members) {
-            if(member.getId().equals(id)){
-                Members.remove(member);
-                return;
-            }
-        }
+    public void removeMember(UUID id) {
+        members.removeIf(member -> member.getId().equals(id));
+    }
+
+    public void addMessage(Message message) {
+        this.messages.add(message);
+    }
+
+    public void removeMessage(UUID id) {
+        messages.removeIf(message -> message.getId().equals(id));
+
     }
 
     @Override
@@ -68,7 +78,8 @@ public class Channel {
         sb.append(", createdAt=").append(createdAt);
         sb.append(", updatedAt=").append(updatedAt);
         sb.append(", name='").append(name).append('\'');
-        sb.append(", Members=").append(Members);
+        sb.append(", Members=").append(members);
+        sb.append(", Messages=").append(messages);
         sb.append('}');
         return sb.toString();
     }
