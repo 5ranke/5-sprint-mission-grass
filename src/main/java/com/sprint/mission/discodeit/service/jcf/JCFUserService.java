@@ -8,7 +8,7 @@ import java.util.*;
 public class JCFUserService implements UserService {
     private final Map<UUID, User> data;
 
-    public JCFUserService(){
+    public JCFUserService() {
         this.data = new HashMap<>();
     }
 
@@ -19,6 +19,7 @@ public class JCFUserService implements UserService {
 
     @Override
     public User read(UUID id) {
+
         return data.get(id);
     }
 
@@ -29,8 +30,7 @@ public class JCFUserService implements UserService {
 
     @Override
     public void update(UUID id, String newName) {
-        User user = data.get(id);
-        user.updateName(newName);
+        data.get(id).updateName(newName);
     }
 
     @Override
