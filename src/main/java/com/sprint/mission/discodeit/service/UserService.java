@@ -7,8 +7,18 @@ import java.util.UUID;
 
 public interface UserService {
     void create(User user);
-    User read(UUID id);
+
+    User read(UUID uuid);
+
+    User read(String id);
+
+    List<User> readByKeyword(String keyword);
+
     List<User> readAll();
-    void update(UUID id, String newName);
-    void delete(UUID id);
+
+    void update(UUID uuid, String newName);
+
+    void delete(UUID uuid);
+
+    boolean checkId(String id);
 }

@@ -14,13 +14,36 @@ public class JCFUserService implements UserService {
 
     @Override
     public void create(User user) {
-        data.put(user.getId(), user);
+        data.put(user.getUuid(), user);
     }
 
-    @Override
-    public User read(UUID id) {
 
-        return data.get(id);
+    @Override
+    public User read(UUID uuid) {
+        User readUser = data.get(uuid);
+        return readUser;
+    }
+
+    public User read(String id) {
+        for (UUID uuid : data.keySet()) {
+            if (data.get(uuid).getId().equals(id)) {
+                return data.get(uuid);
+            }
+        }
+        return null;
+    }
+
+    public List<User> readByKeyword(String keyword) {
+        List<User> userList = new ArrayList<>();
+        for (UUID uuid : data.keySet()) {
+            if (data.get(uuid).getId().contains(keyword) || data.get(uuid).getName().contains(keyword)) {
+                userList.add(data.get(uuid));
+            }
+        }
+        if (userList.isEmpty()) {
+            return null;
+        }
+        return userList;
     }
 
     @Override
@@ -29,12 +52,22 @@ public class JCFUserService implements UserService {
     }
 
     @Override
-    public void update(UUID id, String newName) {
-        data.get(id).updateName(newName);
+    public void update(UUID uuid, String newName) {
+        data.get(uuid).updateName(newName);
     }
 
     @Override
-    public void delete(UUID id) {
-        data.remove(id);
+    public void delete(UUID uuid) {
+        data.remove(uuid);
+    }
+
+    @Override
+    public boolean checkId(String id) { // 중복 체크
+        for (UUID uuid : data.keySet()) {
+            if (data.get(uuid).getId().equals(id)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

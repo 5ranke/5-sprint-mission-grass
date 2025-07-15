@@ -9,14 +9,24 @@ import java.util.UUID;
 
 public interface ChannelService {
     void create(Channel channel);
+
     Channel read(UUID id);
+
+    Channel read(String name);
+
     List<Channel> readAll();
+
     void update(UUID id, String newName);
+
     void delete(UUID id);
 
     void addMember(UUID channelId, User user);
+
     void removeMember(UUID channelId, UUID memberId);
 
     void addMessage(UUID channelId, Message message);
+
     void removeMessage(UUID channelId, UUID messageId);
+
+    public boolean checkName(String name);
 }

@@ -16,14 +16,24 @@ public class JCFChannelService implements ChannelService {
 
     @Override
     public void create(Channel channel) {
-        data.put(channel.getId(), channel);
-        System.out.println(channel+"채널이 생성되었습니다");
+        data.put(channel.getUuid(), channel);
     }
 
     @Override
     public Channel read(UUID id) {
-        return data.get(id);
+        Channel readChannel = data.get(id);
+        return readChannel;
     }
+
+    public Channel read(String name) {
+        for (UUID uuid : data.keySet()) {
+            if (data.get(uuid).getName().equals(name)) {
+                return data.get(uuid);
+            }
+        }
+        return null;
+    }
+
 
     @Override
     public List<Channel> readAll() {
@@ -43,7 +53,6 @@ public class JCFChannelService implements ChannelService {
     @Override
     public void addMember(UUID channelId, User user) {
         data.get(channelId).addMember(user);
-
     }
 
     @Override
@@ -59,5 +68,15 @@ public class JCFChannelService implements ChannelService {
     @Override
     public void removeMessage(UUID channelId, UUID messageId) {
         data.get(channelId).removeMessage(messageId);
+    }
+
+    @Override
+    public boolean checkName(String name) {
+        for (UUID uuid : data.keySet()) {
+            if (data.get(uuid).getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

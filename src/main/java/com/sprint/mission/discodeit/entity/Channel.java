@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class Channel {
-    private final UUID id;
+    private final UUID uuid;
     private final Long createdAt;
     private Long updatedAt;
     private String name;
@@ -13,7 +13,7 @@ public class Channel {
     private List<Message> messages;
 
     public Channel(String name) {
-        this.id = UUID.randomUUID();
+        this.uuid = UUID.randomUUID();
         this.createdAt = System.currentTimeMillis();
         this.updatedAt = createdAt;
         this.name = name;
@@ -21,8 +21,8 @@ public class Channel {
         this.messages = new ArrayList<>();
     }
 
-    public UUID getId() {
-        return id;
+    public UUID getUuid() {
+        return uuid;
     }
 
     public Long getCreatedAt() {
@@ -73,14 +73,10 @@ public class Channel {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Channel{");
-        sb.append("id=").append(id);
-        sb.append(", createdAt=").append(createdAt);
-        sb.append(", updatedAt=").append(updatedAt);
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", Members=").append(members);
-        sb.append(", Messages=").append(messages);
-        sb.append('}');
+        final StringBuilder sb = new StringBuilder();
+        sb.append("- ").append(name);
+        sb.append(" (멤버: ").append(members);
+        sb.append(", 메시지: ").append(messages).append(")");
         return sb.toString();
     }
 }
