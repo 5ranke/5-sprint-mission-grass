@@ -12,7 +12,7 @@ public interface ChannelService {
 
     Channel read(UUID id);
 
-    Channel read(String name);
+    List<User> readMembers(UUID channelId);
 
     List<Channel> readAll();
 
@@ -28,5 +28,5 @@ public interface ChannelService {
 
     void removeMessage(UUID channelId, UUID messageId);
 
-    public boolean checkName(String name);
+    boolean checkName(String name);
 }

@@ -10,11 +10,11 @@ public interface MessageService {
 
     Message read(UUID id);
 
-    public List<Message> searchMessage(String token);
+    List<Message> searchMessage(String token);
 
     List<Message> readAll();
 
-    void update(UUID id, String newContent);
+    void updateContent(UUID id, String newContent);
 
     void delete(UUID id);
 }

@@ -1,7 +1,6 @@
 package com.sprint.mission.discodeit.service.jcf;
 
 import com.sprint.mission.discodeit.entity.Message;
-import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.service.MessageService;
 
 import java.util.*;
@@ -16,7 +15,7 @@ public class JCFMessageService implements MessageService {
 
     @Override
     public void create(Message message) {
-        data.put(message.getId(), message);
+        data.put(message.getUuid(), message);
     }
 
     @Override
@@ -25,6 +24,12 @@ public class JCFMessageService implements MessageService {
         return readMessage;
     }
 
+    @Override
+    public List<Message> readAll() {
+        return new ArrayList<>(data.values());
+    }
+
+    @Override
     public List<Message> searchMessage(String token) {
         List<Message> searchList = new ArrayList<>();
         for (UUID uuid : data.keySet()) {
@@ -36,12 +41,7 @@ public class JCFMessageService implements MessageService {
     }
 
     @Override
-    public List<Message> readAll() {
-        return new ArrayList<>(data.values());
-    }
-
-    @Override
-    public void update(UUID uuid, String newContent) {
+    public void updateContent(UUID uuid, String newContent) {
         data.get(uuid).updateContent(newContent);
     }
 

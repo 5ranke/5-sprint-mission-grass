@@ -59,7 +59,11 @@ public class Channel {
     }
 
     public void removeMember(UUID id) {
-        members.removeIf(member -> member.getId().equals(id));
+        for (User user : members) {
+            if(user.getUuid().equals(id)){
+                members.remove(user);
+            }
+        }
     }
 
     public void addMessage(Message message) {
@@ -67,16 +71,27 @@ public class Channel {
     }
 
     public void removeMessage(UUID id) {
-        messages.removeIf(message -> message.getId().equals(id));
+        for (Message message : messages) {
+            if(message.getUuid().equals(id)){
+                messages.remove(message);
+            }
+        }
+    }
 
+    public String channelInfo() {
+        return "[%s]\n- 멤버: %s\n- 메시지 : %s\n".formatted(name, members, messages);
     }
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder();
-        sb.append("- ").append(name);
-        sb.append(" (멤버: ").append(members);
-        sb.append(", 메시지: ").append(messages).append(")");
+        final StringBuilder sb = new StringBuilder("Channel{");
+        sb.append("uuid=").append(uuid);
+        sb.append(", createdAt=").append(createdAt);
+        sb.append(", updatedAt=").append(updatedAt);
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", members=").append(members);
+        sb.append(", messages=").append(messages);
+        sb.append('}');
         return sb.toString();
     }
 }

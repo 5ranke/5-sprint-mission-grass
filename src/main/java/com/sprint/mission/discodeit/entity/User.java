@@ -10,7 +10,6 @@ public class User {
     private String pw;
     private String name;
 
-
     public User(String id, String pw, String name) {
         this.uuid = UUID.randomUUID();
         this.createdAt = System.currentTimeMillis();
@@ -58,12 +57,20 @@ public class User {
         update();
     }
 
+    public String userInfo() {
+        return "[%s님 (id: %s)]".formatted(name, id);
+    }
+
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder();
-        sb.append("[").append(name);
-        sb.append("님 (id: ").append(id);
-        sb.append(", pw: ").append(pw).append(")]");
+        final StringBuilder sb = new StringBuilder("User{");
+        sb.append("uuid=").append(uuid);
+        sb.append(", createdAt=").append(createdAt);
+        sb.append(", updatedAt=").append(updatedAt);
+        sb.append(", id='").append(id).append('\'');
+        sb.append(", pw='").append(pw).append('\'');
+        sb.append(", name='").append(name).append('\'');
+        sb.append('}');
         return sb.toString();
     }
 }

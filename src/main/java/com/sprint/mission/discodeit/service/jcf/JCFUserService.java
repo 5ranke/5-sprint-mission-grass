@@ -24,19 +24,16 @@ public class JCFUserService implements UserService {
         return readUser;
     }
 
-    public User read(String id) {
-        for (UUID uuid : data.keySet()) {
-            if (data.get(uuid).getId().equals(id)) {
-                return data.get(uuid);
-            }
-        }
-        return null;
+    @Override
+    public List<User> readAll() {
+        return new ArrayList<>(data.values());
     }
 
-    public List<User> readByKeyword(String keyword) {
+    @Override
+    public List<User> findByNameOrEmail(String token) {
         List<User> userList = new ArrayList<>();
         for (UUID uuid : data.keySet()) {
-            if (data.get(uuid).getId().contains(keyword) || data.get(uuid).getName().contains(keyword)) {
+            if (data.get(uuid).getId().contains(token) || data.get(uuid).getName().contains(token)) {
                 userList.add(data.get(uuid));
             }
         }
@@ -47,13 +44,13 @@ public class JCFUserService implements UserService {
     }
 
     @Override
-    public List<User> readAll() {
-        return new ArrayList<>(data.values());
+    public void updateName(UUID uuid, String newName) {
+        data.get(uuid).updateName(newName);
     }
 
     @Override
-    public void update(UUID uuid, String newName) {
-        data.get(uuid).updateName(newName);
+    public void updatePw(UUID uuid, String newPw) {
+        data.get(uuid).updatePw(newPw);
     }
 
     @Override
@@ -62,12 +59,22 @@ public class JCFUserService implements UserService {
     }
 
     @Override
-    public boolean checkId(String id) { // 중복 체크
-        for (UUID uuid : data.keySet()) {
-            if (data.get(uuid).getId().equals(id)) {
+    public boolean checkId(String inputId) { // 중복 체크
+        for (User user : data.values()) {
+            if (user.getId().equals(inputId)) {
                 return true;
             }
         }
         return false;
+    }
+
+    @Override
+    public User login(String loginId, String loginPw) {
+        for (User user : data.values()) {
+            if (user.getId().equals(loginId) && user.getId().equals(loginPw)) {
+                return user;
+            }
+        }
+        return null;
     }
 }

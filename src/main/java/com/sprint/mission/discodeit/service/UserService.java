@@ -10,15 +10,17 @@ public interface UserService {
 
     User read(UUID uuid);
 
-    User read(String id);
-
-    List<User> readByKeyword(String keyword);
-
     List<User> readAll();
 
-    void update(UUID uuid, String newName);
+    List<User> findByNameOrEmail(String token);
+
+    void updateName(UUID uuid, String newName);
+
+    void updatePw(UUID uuid, String newPw);
 
     void delete(UUID uuid);
 
     boolean checkId(String id);
+
+    User login(String id, String pw);
 }

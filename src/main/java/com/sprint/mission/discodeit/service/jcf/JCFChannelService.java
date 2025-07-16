@@ -25,15 +25,10 @@ public class JCFChannelService implements ChannelService {
         return readChannel;
     }
 
-    public Channel read(String name) {
-        for (UUID uuid : data.keySet()) {
-            if (data.get(uuid).getName().equals(name)) {
-                return data.get(uuid);
-            }
-        }
-        return null;
+    @Override
+    public List<User> readMembers(UUID channelUuid) {
+        return new ArrayList<>(data.get(channelUuid).getMembers());
     }
-
 
     @Override
     public List<Channel> readAll() {

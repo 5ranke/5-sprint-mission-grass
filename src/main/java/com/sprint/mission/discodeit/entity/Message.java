@@ -19,7 +19,7 @@ public class Message {
         this.content = content;
     }
 
-    public UUID getId() {
+    public UUID getUuid() {
         return uuid;
     }
 
@@ -52,12 +52,21 @@ public class Message {
         update();
     }
 
+    public String messageInfo() {
+        return "[%s]\n최종 작성 시간 : %s".formatted(content,updatedAt);
+    }
+
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder();
-        sb.append("[").append(content).append("]");
+        final StringBuilder sb = new StringBuilder("Message{");
+        sb.append("uuid=").append(uuid);
+        sb.append(", createdAt=").append(createdAt);
+        sb.append(", updatedAt=").append(updatedAt);
+        sb.append(", authorId=").append(authorId);
+        sb.append(", channelId=").append(channelId);
+        sb.append(", content='").append(content).append('\'');
+        sb.append('}');
         return sb.toString();
     }
-    //TODO : 출력시 작성자 이름 또는 아이디 함께
 }
 
