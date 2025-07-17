@@ -1,6 +1,6 @@
 package com.sprint.mission.discodeit.entity;
 
-import java.util.UUID;
+import java.util.*;
 
 public class User {
     private final UUID uuid;
@@ -13,7 +13,6 @@ public class User {
     public User(String id, String pw, String name) {
         this.uuid = UUID.randomUUID();
         this.createdAt = System.currentTimeMillis();
-        this.updatedAt = createdAt;
         this.id = id;
         this.pw = pw;
         this.name = name;
@@ -57,20 +56,28 @@ public class User {
         update();
     }
 
-    public String userInfo() {
-        return "[%s님 (id: %s)]".formatted(name, id);
-    }
-
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("User{");
-        sb.append("uuid=").append(uuid);
-        sb.append(", createdAt=").append(createdAt);
-        sb.append(", updatedAt=").append(updatedAt);
+//        sb.append("uuid=").append(uuid);
+//        sb.append(", createdAt=").append(createdAt);
+        sb.append("updatedAt=").append(updatedAt);
         sb.append(", id='").append(id).append('\'');
         sb.append(", pw='").append(pw).append('\'');
         sb.append(", name='").append(name).append('\'');
-        sb.append('}');
+        sb.append("}\n");
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(uuid, user.uuid) && Objects.equals(createdAt, user.createdAt) && Objects.equals(updatedAt, user.updatedAt) && Objects.equals(id, user.id) && Objects.equals(pw, user.pw) && Objects.equals(name, user.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(uuid, createdAt, updatedAt, id, pw, name);
     }
 }

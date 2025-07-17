@@ -1,21 +1,20 @@
 package com.sprint.mission.discodeit.entity;
 
-import java.util.UUID;
+import java.util.*;
 
 public class Message {
     private final UUID uuid;
     private final Long createdAt;
     private Long updatedAt;
-    private final UUID authorId;
-    private final UUID channelId;
+    private final UUID authorUuid;
+    private final UUID channelUuid;
     private String content;
 
-    public Message(UUID authorId, UUID channelId, String content) {
+    public Message(UUID authorUuid, UUID channelUuid, String content) {
         this.uuid = UUID.randomUUID();
         this.createdAt = System.currentTimeMillis();
-        this.updatedAt = createdAt;
-        this.authorId = authorId;
-        this.channelId = channelId;
+        this.authorUuid = authorUuid;
+        this.channelUuid = channelUuid;
         this.content = content;
     }
 
@@ -31,12 +30,12 @@ public class Message {
         return updatedAt;
     }
 
-    public UUID getAuthorId() {
-        return authorId;
+    public UUID getAuthorUuid() {
+        return authorUuid;
     }
 
-    public UUID getChannelId() {
-        return channelId;
+    public UUID getChannelUuid() {
+        return channelUuid;
     }
 
     public String getContent() {
@@ -52,21 +51,29 @@ public class Message {
         update();
     }
 
-    public String messageInfo() {
-        return "[%s]\n최종 작성 시간 : %s".formatted(content,updatedAt);
-    }
-
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Message{");
-        sb.append("uuid=").append(uuid);
-        sb.append(", createdAt=").append(createdAt);
-        sb.append(", updatedAt=").append(updatedAt);
-        sb.append(", authorId=").append(authorId);
-        sb.append(", channelId=").append(channelId);
+//        sb.append("uuid=").append(uuid);
+//        sb.append(", createdAt=").append(createdAt);
+        sb.append("updatedAt=").append(updatedAt);
+        sb.append(", authorUuid=").append(authorUuid);
+        sb.append(", channelUuid=").append(channelUuid);
         sb.append(", content='").append(content).append('\'');
-        sb.append('}');
+        sb.append("}\n");
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Message message = (Message) o;
+        return Objects.equals(uuid, message.uuid) && Objects.equals(createdAt, message.createdAt) && Objects.equals(updatedAt, message.updatedAt) && Objects.equals(authorUuid, message.authorUuid) && Objects.equals(channelUuid, message.channelUuid) && Objects.equals(content, message.content);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(uuid, createdAt, updatedAt, authorUuid, channelUuid, content);
     }
 }
 

@@ -13,24 +13,41 @@ public class JCFUserService implements UserService {
     }
 
     @Override
-    public void create(User user) {
+    public User create(String id, String pw, String name) {
+        if (id == null || pw == null || name == null || id.isBlank() || pw.isBlank() || name.isBlank()) {
+            throw new IllegalArgumentException("값이 null 이거나 비어있을 수 없습니다.");
+        }
+        for (UUID uuid : data.keySet()) {
+            if (data.get(uuid).getId().equals(id)) {
+                throw new IllegalArgumentException("id가 중복입니다.");
+            }
+        }
+        User user = new User(id, pw, name);
         data.put(user.getUuid(), user);
+
+        return user;
     }
 
 
     @Override
     public User read(UUID uuid) {
-        User readUser = data.get(uuid);
-        return readUser;
+        if (!data.containsKey(uuid)) {
+            throw new NoSuchElementException("유저가 없습니다.");
+        }
+        return data.get(uuid);
     }
 
     @Override
     public List<User> readAll() {
-        return new ArrayList<>(data.values());
+        List<User> userList = new ArrayList<>(data.values());
+        if (userList.isEmpty()) {
+            throw new NoSuchElementException("결과가 없습니다.");
+        }
+        return userList;
     }
 
     @Override
-    public List<User> findByNameOrEmail(String token) {
+    public List<User> searchByNameOrEmail(String token) {
         List<User> userList = new ArrayList<>();
         for (UUID uuid : data.keySet()) {
             if (data.get(uuid).getId().contains(token) || data.get(uuid).getName().contains(token)) {
@@ -38,43 +55,37 @@ public class JCFUserService implements UserService {
             }
         }
         if (userList.isEmpty()) {
-            return null;
+            throw new NoSuchElementException("결과가 없습니다.");
         }
         return userList;
     }
 
     @Override
-    public void updateName(UUID uuid, String newName) {
-        data.get(uuid).updateName(newName);
-    }
-
-    @Override
-    public void updatePw(UUID uuid, String newPw) {
-        data.get(uuid).updatePw(newPw);
-    }
-
-    @Override
-    public void delete(UUID uuid) {
-        data.remove(uuid);
-    }
-
-    @Override
-    public boolean checkId(String inputId) { // 중복 체크
-        for (User user : data.values()) {
-            if (user.getId().equals(inputId)) {
-                return true;
-            }
+    public User updateName(UUID target, UUID request, String newName) {
+        if (!data.get(request).getUuid().equals(target)) {
+            throw new IllegalArgumentException("수정 권한이 없습니다.");
         }
-        return false;
+        User user = data.get(target);
+        user.updateName(newName);
+        return user;
     }
 
     @Override
-    public User login(String loginId, String loginPw) {
-        for (User user : data.values()) {
-            if (user.getId().equals(loginId) && user.getId().equals(loginPw)) {
-                return user;
-            }
+    public User updatePw(UUID target, UUID request, String newPw) {
+        if (!data.get(request).getUuid().equals(target)) {
+            throw new IllegalArgumentException("수정 권한이 없습니다.");
         }
+        User user = data.get(target);
+        user.updatePw(newPw);
+        return user;
+    }
+
+    @Override
+    public User delete(UUID target, UUID request) {
+        if (!data.get(request).getUuid().equals(target)) {
+            throw new IllegalArgumentException("삭제 권한이 없습니다.");
+        }
+        data.remove(target);
         return null;
     }
 }
