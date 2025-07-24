@@ -25,7 +25,7 @@ public class JCFMessageService implements MessageService {
     }
 
     @Override
-    public Message read(UUID messageUuid) {
+    public Message find(UUID messageUuid) {
         if (!data.containsKey(messageUuid)) {
             throw new NoSuchElementException("메시지가 없습니다");
         }
@@ -33,7 +33,7 @@ public class JCFMessageService implements MessageService {
     }
 
     @Override
-    public List<Message> readAll() {
+    public List<Message> findAll() {
         List<Message> messagesist = new ArrayList<>(data.values());
         if (messagesist.isEmpty()) {
             throw new NoSuchElementException("결과가 없습니다.");
@@ -42,7 +42,7 @@ public class JCFMessageService implements MessageService {
     }
 
     @Override
-    public List<Message> readChannelMessage(UUID channelUuid) {
+    public List<Message> findChannelMessage(UUID channelUuid) {
         List<Message> messageList = new ArrayList<>();
         for (UUID uuid : data.keySet()) {
             if (data.get(uuid).getChannelUuid().equals(channelUuid)) {
@@ -58,7 +58,7 @@ public class JCFMessageService implements MessageService {
     }
 
     @Override
-    public List<Message> searchMessage(String token) {
+    public List<Message> findByContent(String token) {
         List<Message> messageList = new ArrayList<>();
         for (UUID uuid : data.keySet()) {
             if (data.get(uuid).getContent().contains(token)) {

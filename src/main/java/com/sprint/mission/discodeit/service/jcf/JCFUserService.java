@@ -30,7 +30,7 @@ public class JCFUserService implements UserService {
 
 
     @Override
-    public User read(UUID uuid) {
+    public User find(UUID uuid) {
         if (!data.containsKey(uuid)) {
             throw new NoSuchElementException("유저가 없습니다.");
         }
@@ -38,7 +38,7 @@ public class JCFUserService implements UserService {
     }
 
     @Override
-    public List<User> readAll() {
+    public List<User> findAll() {
         List<User> userList = new ArrayList<>(data.values());
         if (userList.isEmpty()) {
             throw new NoSuchElementException("결과가 없습니다.");
@@ -47,7 +47,7 @@ public class JCFUserService implements UserService {
     }
 
     @Override
-    public List<User> searchByNameOrEmail(String token) {
+    public List<User> findByNameOrEmail(String token) {
         List<User> userList = new ArrayList<>();
         for (UUID uuid : data.keySet()) {
             if (data.get(uuid).getId().contains(token) || data.get(uuid).getName().contains(token)) {

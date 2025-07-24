@@ -8,13 +8,13 @@ import java.util.UUID;
 public interface MessageService {
     Message create(UUID authorUuid, UUID channelUuid, String content);
 
-    Message read(UUID messageUuid);
+    Message find(UUID messageUuid);
 
-    List<Message> readAll();
+    List<Message> findAll();
 
-    List<Message> readChannelMessage(UUID channelUuid);
+    List<Message> findChannelMessage(UUID channelUuid);
 
-    List<Message> searchMessage(String token);
+    List<Message> findByContent(String token);
 
     Message updateContent(UUID messageUuid, UUID request, String newContent);
 

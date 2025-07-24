@@ -30,7 +30,7 @@ public class JCFChannelService implements ChannelService {
     }
 
     @Override
-    public Channel read(UUID channelUuid) {
+    public Channel find(UUID channelUuid) {
         if (!data.containsKey(channelUuid)) {
             throw new NoSuchElementException("채널이 없습니다.");
         }
@@ -38,7 +38,7 @@ public class JCFChannelService implements ChannelService {
     }
 
     @Override
-    public List<UUID> readMembers(UUID channelUuid) {
+    public List<UUID> findMembers(UUID channelUuid) {
         List<UUID> memberList = new ArrayList<>(data.get(channelUuid).getMembers());
         if (memberList.isEmpty()) {
             throw new NoSuchElementException("결과가 없습니다.");
@@ -47,7 +47,7 @@ public class JCFChannelService implements ChannelService {
     }
 
     @Override
-    public List<Channel> readAll() {
+    public List<Channel> findAll() {
         List<Channel> channelList = new ArrayList<>(data.values());
         if (channelList.isEmpty()) {
             throw new NoSuchElementException("결과가 없습니다.");
@@ -55,7 +55,7 @@ public class JCFChannelService implements ChannelService {
         return channelList;
     }
 
-    public List<Channel> searchChannel(String token) {
+    public List<Channel> findChannel(String token) {
         List<Channel> channelList = new ArrayList<>();
         for (UUID uuid : data.keySet()) {
             if (data.get(uuid).getName().contains(token)) {

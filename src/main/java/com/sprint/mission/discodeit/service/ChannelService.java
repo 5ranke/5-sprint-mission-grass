@@ -8,13 +8,13 @@ import java.util.UUID;
 public interface ChannelService {
     Channel create(UUID creatorUuid, String name);
 
-    Channel read(UUID channelUuid);
+    Channel find(UUID channelUuid);
 
-    List<UUID> readMembers(UUID channelUuid);
+    List<UUID> findMembers(UUID channelUuid);
 
-    List<Channel> readAll();
+    List<Channel> findAll();
 
-    List<Channel> searchChannel(String token);
+    List<Channel> findChannel(String token);
 
     Channel update(UUID channelUuid, UUID request, String newName);
 
