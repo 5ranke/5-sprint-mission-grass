@@ -1,25 +1,30 @@
 package com.sprint.mission.discodeit.entity;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.*;
 
-public class User {
-    private final UUID uuid;
+public class User implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    private final UUID id;
     private final Long createdAt;
     private Long updatedAt;
-    private final String id;
+    private final String userid;
     private String pw;
     private String name;
 
-    public User(String id, String pw, String name) {
-        this.uuid = UUID.randomUUID();
+    public User(String userid, String pw, String name) {
+        this.id = UUID.randomUUID();
         this.createdAt = System.currentTimeMillis();
-        this.id = id;
+        this.userid = userid;
         this.pw = pw;
         this.name = name;
     }
 
-    public UUID getUuid() {
-        return uuid;
+    public UUID getId() {
+        return id;
     }
 
     public Long getCreatedAt() {
@@ -30,8 +35,8 @@ public class User {
         return updatedAt;
     }
 
-    public String getId() {
-        return id;
+    public String getUserid() {
+        return userid;
     }
 
     public String getPw() {
@@ -62,7 +67,7 @@ public class User {
 //        sb.append("uuid=").append(uuid);
 //        sb.append(", createdAt=").append(createdAt);
         sb.append("updatedAt=").append(updatedAt);
-        sb.append(", id='").append(id).append('\'');
+        sb.append(", userid='").append(userid).append('\'');
         sb.append(", pw='").append(pw).append('\'');
         sb.append(", name='").append(name).append('\'');
         sb.append("}\n");
@@ -73,11 +78,11 @@ public class User {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(uuid, user.uuid) && Objects.equals(createdAt, user.createdAt) && Objects.equals(updatedAt, user.updatedAt) && Objects.equals(id, user.id) && Objects.equals(pw, user.pw) && Objects.equals(name, user.name);
+        return Objects.equals(id, user.id) && Objects.equals(createdAt, user.createdAt) && Objects.equals(updatedAt, user.updatedAt) && Objects.equals(userid, user.userid) && Objects.equals(pw, user.pw) && Objects.equals(name, user.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, createdAt, updatedAt, id, pw, name);
+        return Objects.hash(id, createdAt, updatedAt, userid, pw, name);
     }
 }
