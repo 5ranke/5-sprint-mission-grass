@@ -43,9 +43,9 @@ public class FileUserRepository implements UserRepository {
     }
 
     @Override
-    public Optional<User> findById(UUID uuid) {
+    public Optional<User> findById(UUID id) {
         User user = null;
-        Path path = Paths.get(DIRECTORY, uuid.toString() + EXTENSION);
+        Path path = Paths.get(DIRECTORY, id.toString() + EXTENSION);
         try (FileInputStream fis = new FileInputStream(path.toFile());
              ObjectInputStream ois = new ObjectInputStream(fis)){
             user = (User)ois.readObject();
@@ -80,9 +80,9 @@ public class FileUserRepository implements UserRepository {
 
 
     @Override
-    public User delete(UUID uuid) {
+    public User delete(UUID id) {
         User user = null;
-        Path path = Paths.get(DIRECTORY, uuid.toString() + EXTENSION);
+        Path path = Paths.get(DIRECTORY, id.toString() + EXTENSION);
         try(FileInputStream fis = new FileInputStream(path.toFile());
         ObjectInputStream ois = new ObjectInputStream(fis)){
             user = (User) ois.readObject();
@@ -100,8 +100,8 @@ public class FileUserRepository implements UserRepository {
     }
 
     @Override
-    public boolean existsById(UUID uuid) {
-        Path path = Paths.get(DIRECTORY, uuid.toString()+EXTENSION);
+    public boolean existsById(UUID id) {
+        Path path = Paths.get(DIRECTORY, id.toString()+EXTENSION);
         return Files.exists(path);
     }
 

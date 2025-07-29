@@ -20,9 +20,9 @@ public class JCFUserRepository implements UserRepository {
     }
 
     @Override
-    public Optional<User> findById(UUID uuid) {
-        if(data.containsKey(uuid)){
-            return Optional.of(data.get(uuid));
+    public Optional<User> findById(UUID id) {
+        if(data.containsKey(id)){
+            return Optional.of(data.get(id));
         }
         return Optional.empty();
     }
@@ -33,16 +33,16 @@ public class JCFUserRepository implements UserRepository {
     }
 
     @Override
-    public User delete(UUID uuid) {
-        if(!data.containsKey(uuid)){
-            throw new NoSuchElementException(uuid + "사용자를 찾을 수 없습니다.");
+    public User delete(UUID id) {
+        if(!data.containsKey(id)){
+            throw new NoSuchElementException(id + "사용자를 찾을 수 없습니다.");
         }
-        return data.remove(uuid);
+        return data.remove(id);
     }
 
     @Override
-    public boolean existsById(UUID uuid) {
-        return data.containsKey(uuid);
+    public boolean existsById(UUID id) {
+        return data.containsKey(id);
     }
 
     @Override

@@ -1,25 +1,30 @@
 package com.sprint.mission.discodeit.entity;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.*;
 
-public class Message {
-    private final UUID uuid;
+public class Message implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    private final UUID id;
     private final Long createdAt;
     private Long updatedAt;
-    private final UUID authorUuid;
-    private final UUID channelUuid;
+    private final UUID authorId;
+    private final UUID channelId;
     private String content;
 
-    public Message(UUID authorUuid, UUID channelUuid, String content) {
-        this.uuid = UUID.randomUUID();
+    public Message(UUID authorId, UUID channelId, String content) {
+        this.id = UUID.randomUUID();
         this.createdAt = System.currentTimeMillis();
-        this.authorUuid = authorUuid;
-        this.channelUuid = channelUuid;
+        this.authorId = authorId;
+        this.channelId = channelId;
         this.content = content;
     }
 
-    public UUID getUuid() {
-        return uuid;
+    public UUID getId() {
+        return id;
     }
 
     public Long getCreatedAt() {
@@ -30,12 +35,12 @@ public class Message {
         return updatedAt;
     }
 
-    public UUID getAuthorUuid() {
-        return authorUuid;
+    public UUID getAuthorId() {
+        return authorId;
     }
 
-    public UUID getChannelUuid() {
-        return channelUuid;
+    public UUID getChannelId() {
+        return channelId;
     }
 
     public String getContent() {
@@ -57,8 +62,8 @@ public class Message {
 //        sb.append("uuid=").append(uuid);
 //        sb.append(", createdAt=").append(createdAt);
         sb.append("updatedAt=").append(updatedAt);
-        sb.append(", authorUuid=").append(authorUuid);
-        sb.append(", channelUuid=").append(channelUuid);
+        sb.append(", authorId=").append(authorId);
+        sb.append(", channelId=").append(channelId);
         sb.append(", content='").append(content).append('\'');
         sb.append("}\n");
         return sb.toString();
@@ -68,12 +73,12 @@ public class Message {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Message message = (Message) o;
-        return Objects.equals(uuid, message.uuid) && Objects.equals(createdAt, message.createdAt) && Objects.equals(updatedAt, message.updatedAt) && Objects.equals(authorUuid, message.authorUuid) && Objects.equals(channelUuid, message.channelUuid) && Objects.equals(content, message.content);
+        return Objects.equals(id, message.id) && Objects.equals(createdAt, message.createdAt) && Objects.equals(updatedAt, message.updatedAt) && Objects.equals(authorId, message.authorId) && Objects.equals(channelId, message.channelId) && Objects.equals(content, message.content);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, createdAt, updatedAt, authorUuid, channelUuid, content);
+        return Objects.hash(id, createdAt, updatedAt, authorId, channelId, content);
     }
 }
 

@@ -6,17 +6,17 @@ import java.util.List;
 import java.util.UUID;
 
 public interface MessageService {
-    Message create(UUID authorUuid, UUID channelUuid, String content);
+    Message create(UUID authorId, UUID channelId, String content);
 
-    Message find(UUID messageUuid);
+    Message find(UUID id);
 
     List<Message> findAll();
 
-    List<Message> findChannelMessage(UUID channelUuid);
+    List<Message> findChannelMessage(UUID channelId);
 
     List<Message> findByContent(String token);
 
-    Message updateContent(UUID messageUuid, UUID request, String newContent);
+    Message updateContent(UUID id, UUID requestId, String newContent);
 
-    Message delete(UUID messageUuid, UUID request);
+    Message delete(UUID id, UUID requestId);
 }

@@ -10,13 +10,13 @@ public interface UserRepository {
 
     User save(User user);
 
-    Optional<User> findById(UUID uuid);
+    Optional<User> findById(UUID id);
 
     List<User> findAll();
 
-    User delete(UUID uuid);
+    User delete(UUID id);
 
-    boolean existsById(UUID uuid);
+    boolean existsById(UUID id);
 
     boolean existsByUserid(String userid);
 }

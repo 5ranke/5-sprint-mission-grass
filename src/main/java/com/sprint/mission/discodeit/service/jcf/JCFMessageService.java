@@ -13,23 +13,23 @@ public class JCFMessageService implements MessageService {
     }
 
     @Override
-    public Message create(UUID authorUuid, UUID channelUuid, String content) {
+    public Message create(UUID authorId, UUID channelId, String content) {
         if (content == null || content.isBlank()) {
             throw new IllegalArgumentException("값이 null 이거나 비어있을 수 없습니다.");
         }
 
-        Message message = new Message(authorUuid, channelUuid, content);
-        data.put(message.getUuid(), message);
+        Message message = new Message(authorId, channelId, content);
+        data.put(message.getId(), message);
 
         return message;
     }
 
     @Override
-    public Message find(UUID messageUuid) {
-        if (!data.containsKey(messageUuid)) {
+    public Message find(UUID id) {
+        if (!data.containsKey(id)) {
             throw new NoSuchElementException("메시지가 없습니다");
         }
-        return data.get(messageUuid);
+        return data.get(id);
     }
 
     @Override
@@ -42,11 +42,11 @@ public class JCFMessageService implements MessageService {
     }
 
     @Override
-    public List<Message> findChannelMessage(UUID channelUuid) {
+    public List<Message> findChannelMessage(UUID channelId) {
         List<Message> messageList = new ArrayList<>();
-        for (UUID uuid : data.keySet()) {
-            if (data.get(uuid).getChannelUuid().equals(channelUuid)) {
-                messageList.add(data.get(uuid));
+        for (UUID id : data.keySet()) {
+            if (data.get(id).getChannelId().equals(channelId)) {
+                messageList.add(data.get(id));
             }
         }
 
@@ -72,21 +72,21 @@ public class JCFMessageService implements MessageService {
     }
 
     @Override
-    public Message updateContent(UUID messageUuid, UUID request, String newContent) {
-        if (!data.get(messageUuid).getAuthorUuid().equals(request)) {
+    public Message updateContent(UUID messageId, UUID requestId, String newContent) {
+        if (!data.get(messageId).getAuthorId().equals(requestId)) {
             throw new IllegalArgumentException("수정 권한이 없습니다.");
         }
-        Message message = data.get(messageUuid);
+        Message message = data.get(messageId);
         message.updateContent(newContent);
         return message;
     }
 
     @Override
-    public Message delete(UUID messageUuid, UUID request) {
-        if (!data.get(messageUuid).getAuthorUuid().equals(request)) {
+    public Message delete(UUID messageId, UUID requestId) {
+        if (!data.get(messageId).getAuthorId().equals(requestId)) {
             throw new IllegalArgumentException("삭제 권한이 없습니다.");
         }
-        data.remove(messageUuid);
+        data.remove(messageId);
         return null;
     }
 
