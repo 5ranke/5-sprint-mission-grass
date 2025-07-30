@@ -49,7 +49,7 @@ public class FileUserService implements UserService {
 
     @Override
     public User updateName(UUID targetId, UUID requestId, String newName) {
-        if(!targetId.equals(requestId)){
+        if (!targetId.equals(requestId)) {
             throw new IllegalArgumentException("수정 권한이 없습니다.");
         }
         User user = find(targetId);
@@ -59,7 +59,7 @@ public class FileUserService implements UserService {
 
     @Override
     public User updatePw(UUID targetId, UUID requestId, String newPw) {
-        if(!targetId.equals(requestId)){
+        if (!targetId.equals(requestId)) {
             throw new IllegalArgumentException("수정 권한이 없습니다.");
         }
         User user = find(targetId);
@@ -69,7 +69,7 @@ public class FileUserService implements UserService {
 
     @Override
     public User delete(UUID targetId, UUID requestId) {
-        if(!targetId.equals(requestId)){
+        if (!targetId.equals(requestId)) {
             throw new IllegalArgumentException("삭제 권한이 없습니다.");
         }
         return userRepository.delete(targetId);

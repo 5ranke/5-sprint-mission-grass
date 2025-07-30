@@ -59,13 +59,13 @@ public class Message implements Serializable {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Message{");
-//        sb.append("uuid=").append(uuid);
-//        sb.append(", createdAt=").append(createdAt);
-        sb.append("updatedAt=").append(updatedAt);
+        sb.append("id=").append(id);
+        sb.append(", createdAt=").append(createdAt);
+        sb.append(", updatedAt=").append(updatedAt);
         sb.append(", authorId=").append(authorId);
         sb.append(", channelId=").append(channelId);
         sb.append(", content='").append(content).append('\'');
-        sb.append("}\n");
+        sb.append('}');
         return sb.toString();
     }
 

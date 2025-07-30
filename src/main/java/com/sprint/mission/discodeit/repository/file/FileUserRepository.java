@@ -16,11 +16,11 @@ public class FileUserRepository implements UserRepository {
     private final String DIRECTORY;
     private final String EXTENSION;
 
-    public FileUserRepository(){
+    public FileUserRepository() {
         this.DIRECTORY = "USER";
         this.EXTENSION = ".ser";
         Path path = Paths.get(DIRECTORY);
-        if(!path.toFile().exists()){
+        if (!path.toFile().exists()) {
             try {
                 Files.createDirectory(path);
             } catch (IOException e) {
@@ -31,9 +31,9 @@ public class FileUserRepository implements UserRepository {
 
     @Override
     public User save(User user) {
-        Path path = Paths.get(DIRECTORY, user.getId()+EXTENSION);
+        Path path = Paths.get(DIRECTORY, user.getId() + EXTENSION);
         try (FileOutputStream fos = new FileOutputStream(path.toFile());
-        ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+             ObjectOutputStream oos = new ObjectOutputStream(fos)) {
             oos.writeObject(user);
         } catch (Exception e) {
             e.printStackTrace();
@@ -47,8 +47,8 @@ public class FileUserRepository implements UserRepository {
         User user = null;
         Path path = Paths.get(DIRECTORY, id.toString() + EXTENSION);
         try (FileInputStream fis = new FileInputStream(path.toFile());
-             ObjectInputStream ois = new ObjectInputStream(fis)){
-            user = (User)ois.readObject();
+             ObjectInputStream ois = new ObjectInputStream(fis)) {
+            user = (User) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -62,13 +62,13 @@ public class FileUserRepository implements UserRepository {
         File directory = new File(DIRECTORY);
 
         File[] files = directory.listFiles();
-        if(files==null) return userList;
+        if (files == null) return userList;
 
-        for(File file : files) {
-            if(file.isFile() && file.getName().endsWith(EXTENSION)){
-                try(FileInputStream fis = new FileInputStream(file);
-                ObjectInputStream ois = new ObjectInputStream(fis)) {
-                    User user = (User)ois.readObject();
+        for (File file : files) {
+            if (file.isFile() && file.getName().endsWith(EXTENSION)) {
+                try (FileInputStream fis = new FileInputStream(file);
+                     ObjectInputStream ois = new ObjectInputStream(fis)) {
+                    User user = (User) ois.readObject();
                     userList.add(user);
                 } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
@@ -83,42 +83,42 @@ public class FileUserRepository implements UserRepository {
     public User delete(UUID id) {
         User user = null;
         Path path = Paths.get(DIRECTORY, id.toString() + EXTENSION);
-        try(FileInputStream fis = new FileInputStream(path.toFile());
-        ObjectInputStream ois = new ObjectInputStream(fis)){
+        try (FileInputStream fis = new FileInputStream(path.toFile());
+             ObjectInputStream ois = new ObjectInputStream(fis)) {
             user = (User) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
 
-        try{
+        try {
             Files.delete(path);
-        } catch (IOException e){
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
         return user;
     }
 
-    @Override
-    public boolean existsById(UUID id) {
-        Path path = Paths.get(DIRECTORY, id.toString()+EXTENSION);
-        return Files.exists(path);
-    }
+//    @Override
+//    public boolean existsById(UUID id) {
+//        Path path = Paths.get(DIRECTORY, id.toString()+EXTENSION);
+//        return Files.exists(path);
+//    }
 
     @Override
     public boolean existsByUserid(String userid) {
         File directory = new File(DIRECTORY);
         File[] files = directory.listFiles();
 
-        if(files==null) return false;
+        if (files == null) return false;
 
-        for(File file : files){
-            if(file.isFile() && file.getName().endsWith(EXTENSION)){
-                try(FileInputStream fis = new FileInputStream(file);
-                ObjectInputStream ois = new ObjectInputStream(fis)){
+        for (File file : files) {
+            if (file.isFile() && file.getName().endsWith(EXTENSION)) {
+                try (FileInputStream fis = new FileInputStream(file);
+                     ObjectInputStream ois = new ObjectInputStream(fis)) {
                     User user = (User) ois.readObject();
 
-                    if(user.getUserid().equals(userid)) {
+                    if (user.getUserid().equals(userid)) {
                         return true;
                     }
                 } catch (IOException | ClassNotFoundException e) {

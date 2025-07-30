@@ -6,22 +6,21 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ChannelService {
-    Channel create(UUID creatorUuid, String name);
+    Channel create(UUID creatorId, String name);
 
-    Channel find(UUID channelUuid);
+    Channel find(UUID id);
 
-    List<UUID> findMembers(UUID channelUuid);
+    List<UUID> findMembers(UUID id);
 
     List<Channel> findAll();
 
     List<Channel> findChannel(String token);
 
-    Channel update(UUID channelUuid, UUID request, String newName);
+    Channel update(UUID id, UUID requestId, String newName);
 
-    Channel delete(UUID channelUuid, UUID request);
+    Channel delete(UUID id, UUID requestId);
 
-    Channel addMember(UUID channelUuid, UUID userUuid, UUID request);
+    Channel addMember(UUID id, UUID memberId, UUID requestId);
 
-    Channel removeMember(UUID channelUuid, UUID userUuid, UUID request);
-
+    Channel removeMember(UUID id, UUID memberId, UUID requestId);
 }

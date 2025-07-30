@@ -13,33 +13,33 @@ public class JCFChannelService implements ChannelService {
     }
 
     @Override
-    public Channel create(UUID creatorUuid, String name) {
+    public Channel create(UUID creatorId, String name) {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("값이 null 이거나 비어있을 수 없습니다.");
         }
-        for (UUID uuid : data.keySet()) {
-            if (data.get(uuid).getName().equals(name)) {
+        for (UUID id : data.keySet()) {
+            if (data.get(id).getName().equals(name)) {
                 throw new IllegalArgumentException("이름이 중복입니다.");
             }
         }
-        Channel channel = new Channel(creatorUuid, name);
-        data.put(channel.getUuid(), channel);
-        channel.addMember(creatorUuid);
+        Channel channel = new Channel(creatorId, name);
+        data.put(channel.getId(), channel);
+        channel.addMember(creatorId);
 
         return channel;
     }
 
     @Override
-    public Channel find(UUID channelUuid) {
-        if (!data.containsKey(channelUuid)) {
+    public Channel find(UUID id) {
+        if (!data.containsKey(id)) {
             throw new NoSuchElementException("채널이 없습니다.");
         }
-        return data.get(channelUuid);
+        return data.get(id);
     }
 
     @Override
-    public List<UUID> findMembers(UUID channelUuid) {
-        List<UUID> memberList = new ArrayList<>(data.get(channelUuid).getMembers());
+    public List<UUID> findMembers(UUID id) {
+        List<UUID> memberList = new ArrayList<>(data.get(id).getMembers());
         if (memberList.isEmpty()) {
             throw new NoSuchElementException("결과가 없습니다.");
         }
@@ -57,9 +57,9 @@ public class JCFChannelService implements ChannelService {
 
     public List<Channel> findChannel(String token) {
         List<Channel> channelList = new ArrayList<>();
-        for (UUID uuid : data.keySet()) {
-            if (data.get(uuid).getName().contains(token)) {
-                channelList.add(data.get(uuid));
+        for (UUID id : data.keySet()) {
+            if (data.get(id).getName().contains(token)) {
+                channelList.add(data.get(id));
             }
         }
         if (channelList.isEmpty()) {
@@ -69,50 +69,50 @@ public class JCFChannelService implements ChannelService {
     }
 
     @Override
-    public Channel update(UUID channelUuid, UUID request, String newName) {
-        if (!data.get(channelUuid).getCreatorUuid().equals(request)) {
+    public Channel update(UUID id, UUID requestId, String newName) {
+        if (!data.get(id).getCreatorId().equals(requestId)) {
             throw new IllegalArgumentException("수정 권한이 없습니다.");
         }
-        Channel channel = data.get(channelUuid);
+        Channel channel = data.get(id);
         channel.updateName(newName);
         return channel;
     }
 
     @Override
-    public Channel delete(UUID channelUuid, UUID request) {
-        if (!data.get(channelUuid).getCreatorUuid().equals(request)) {
+    public Channel delete(UUID id, UUID requestId) {
+        if (!data.get(id).getCreatorId().equals(requestId)) {
             throw new IllegalArgumentException("삭제 권한이 없습니다.");
         }
-        data.remove(channelUuid);
+        data.remove(id);
         return null;
     }
 
     @Override
-    public Channel addMember(UUID channelUuid, UUID userUuid, UUID request) {
-        if (!data.get(channelUuid).getCreatorUuid().equals(request)) {
+    public Channel addMember(UUID id, UUID memberId, UUID requestId) {
+        if (!data.get(id).getCreatorId().equals(requestId)) {
             throw new IllegalArgumentException("멤버 추가 권한이 없습니다.");
         }
 
-        Channel channel = data.get(channelUuid);
+        Channel channel = data.get(id);
 
-        for (UUID uuid : channel.getMembers()) {
-            if (uuid.equals(userUuid)) {
+        for (UUID u : channel.getMembers()) {
+            if (u.equals(memberId)) {
                 throw new IllegalArgumentException("이미 등록된 멤버입니다.");
             }
         }
 
-        channel.addMember(userUuid);
+        channel.addMember(memberId);
         return channel;
     }
 
     @Override
-    public Channel removeMember(UUID channelUuid, UUID userUuid, UUID request) {
-        if (!data.get(channelUuid).getCreatorUuid().equals(request)) {
+    public Channel removeMember(UUID id, UUID memberId, UUID requestId) {
+        if (!data.get(id).getCreatorId().equals(requestId)) {
             throw new IllegalArgumentException("멤버 삭제 권한이 없습니다.");
         }
 
-        Channel channel = data.get(channelUuid);
-        channel.removeMember(userUuid);
+        Channel channel = data.get(id);
+        channel.removeMember(memberId);
         return channel;
     }
 }

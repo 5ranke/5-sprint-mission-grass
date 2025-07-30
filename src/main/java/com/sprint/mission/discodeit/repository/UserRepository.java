@@ -16,7 +16,7 @@ public interface UserRepository {
 
     User delete(UUID id);
 
-    boolean existsById(UUID id);
+//    boolean existsById(UUID id); // 얜 왜 만들었지?
 
     boolean existsByUserid(String userid);
 }

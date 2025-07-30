@@ -1,25 +1,32 @@
 package com.sprint.mission.discodeit.entity;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.*;
 
-public class Channel {
-    private final UUID uuid;
+public class Channel implements Serializable{
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    private final UUID id;
     private final Long createdAt;
     private Long updatedAt;
     private String name;
-    private final UUID creatorUuid;
+    private final UUID creatorId;
     private List<UUID> members;
 
-    public Channel(UUID creatorUuid, String name) {
-        this.uuid = UUID.randomUUID();
+    public Channel(UUID creatorId, String name) {
+        this.id = UUID.randomUUID();
         this.createdAt = System.currentTimeMillis();
         this.name = name;
-        this.creatorUuid = creatorUuid;
+        this.creatorId = creatorId;
         this.members = new ArrayList<>();
+
+        members.add(creatorId);
     }
 
-    public UUID getUuid() {
-        return uuid;
+    public UUID getId() {
+        return id;
     }
 
     public Long getCreatedAt() {
@@ -38,8 +45,8 @@ public class Channel {
         return members;
     }
 
-    public UUID getCreatorUuid() {
-        return creatorUuid;
+    public UUID getCreatorId() {
+        return creatorId;
     }
 
     private void update() {
@@ -51,14 +58,14 @@ public class Channel {
         update();
     }
 
-    public void addMember(UUID userUuid) {
-        this.members.add(userUuid);
+    public void addMember(UUID id) {
+        this.members.add(id);
     }
 
-    public void removeMember(UUID userUuid) {
+    public void removeMember(UUID id) {
         for (UUID uuid : members) {
-            if (uuid.equals(userUuid)) {
-                members.remove(userUuid);
+            if (uuid.equals(id)) {
+                members.remove(id);
             }
         }
     }
@@ -66,12 +73,13 @@ public class Channel {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Channel{");
-//        sb.append("uuid=").append(uuid);
-//        sb.append(", createdAt=").append(createdAt);
-        sb.append("updatedAt=").append(updatedAt);
+        sb.append("id=").append(id);
+        sb.append(", createdAt=").append(createdAt);
+        sb.append(", updatedAt=").append(updatedAt);
         sb.append(", name='").append(name).append('\'');
+        sb.append(", creatorId=").append(creatorId);
         sb.append(", members=").append(members);
-        sb.append("}\n");
+        sb.append('}');
         return sb.toString();
     }
 
@@ -79,11 +87,11 @@ public class Channel {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Channel channel = (Channel) o;
-        return Objects.equals(uuid, channel.uuid) && Objects.equals(createdAt, channel.createdAt) && Objects.equals(updatedAt, channel.updatedAt) && Objects.equals(name, channel.name) && Objects.equals(creatorUuid, channel.creatorUuid) && Objects.equals(members, channel.members);
+        return Objects.equals(id, channel.id) && Objects.equals(createdAt, channel.createdAt) && Objects.equals(updatedAt, channel.updatedAt) && Objects.equals(name, channel.name) && Objects.equals(creatorId, channel.creatorId) && Objects.equals(members, channel.members);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, createdAt, updatedAt, name, creatorUuid, members);
+        return Objects.hash(id, createdAt, updatedAt, name, creatorId, members);
     }
 }

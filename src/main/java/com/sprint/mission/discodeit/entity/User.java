@@ -64,13 +64,13 @@ public class User implements Serializable {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("User{");
-//        sb.append("uuid=").append(uuid);
-//        sb.append(", createdAt=").append(createdAt);
-        sb.append("updatedAt=").append(updatedAt);
+        sb.append("id=").append(id);
+        sb.append(", createdAt=").append(createdAt);
+        sb.append(", updatedAt=").append(updatedAt);
         sb.append(", userid='").append(userid).append('\'');
         sb.append(", pw='").append(pw).append('\'');
         sb.append(", name='").append(name).append('\'');
-        sb.append("}\n");
+        sb.append('}');
         return sb.toString();
     }
 
