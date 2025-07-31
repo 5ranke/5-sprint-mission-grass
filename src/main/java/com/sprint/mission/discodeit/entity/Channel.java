@@ -4,7 +4,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
 
-public class Channel implements Serializable{
+public class Channel implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -63,11 +63,7 @@ public class Channel implements Serializable{
     }
 
     public void removeMember(UUID id) {
-        for (UUID uuid : members) {
-            if (uuid.equals(id)) {
-                members.remove(id);
-            }
-        }
+        members.remove(id);
     }
 
     @Override

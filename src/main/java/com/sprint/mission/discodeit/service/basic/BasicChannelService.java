@@ -30,7 +30,7 @@ public class BasicChannelService implements ChannelService {
     @Override
     public Channel find(UUID id) {
         return channelRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("해당 채널이 존재하지 않습니다."));
+                .orElseThrow(() -> new NoSuchElementException("[!] 해당 채널이 존재하지 않습니다."));
     }
 
     @Override
@@ -53,7 +53,7 @@ public class BasicChannelService implements ChannelService {
         Channel channel = find(id);
 
         if (!channel.getCreatorId().equals(requestId)) {
-            throw new IllegalArgumentException("수정 권한이 없습니다.");
+            throw new IllegalArgumentException("[!] 수정 권한이 없습니다.");
         }
         channel.updateName(newName);
         return channelRepository.save(channel);
@@ -61,10 +61,14 @@ public class BasicChannelService implements ChannelService {
 
     @Override
     public void delete(UUID id, UUID requestId) {
+        if (!channelRepository.existsById(id)) {
+            throw new NoSuchElementException("[!] 채널이 존재하지 않습니다.");
+        }
+
         Channel channel = find(id);
 
         if (!channel.getCreatorId().equals(requestId)) {
-            throw new IllegalArgumentException("삭제 권한이 없습니다.");
+            throw new IllegalArgumentException("[!] 삭제 권한이 없습니다.");
         }
 
         channelRepository.delete(id);
@@ -75,11 +79,11 @@ public class BasicChannelService implements ChannelService {
         Channel channel = find(id);
 
         if (!channel.getCreatorId().equals(requestId)) {
-            throw new IllegalArgumentException("멤버 추가 권한이 없습니다.");
+            throw new IllegalArgumentException("[!] 멤버 추가 권한이 없습니다.");
         }
 
         if (findMembers(id).contains(memberId)) {
-            throw new IllegalArgumentException("이미 등록된 멤버입니다.");
+            throw new IllegalArgumentException("[!] 이미 등록된 멤버입니다.");
         }
 
         channel.addMember(memberId);
@@ -91,7 +95,7 @@ public class BasicChannelService implements ChannelService {
         Channel channel = find(id);
 
         if (!channel.getCreatorId().equals(requestId)) {
-            throw new IllegalArgumentException("멤버 삭제 권한이 없습니다.");
+            throw new IllegalArgumentException("[!] 멤버 삭제 권한이 없습니다.");
         }
         channel.removeMember(memberId);
         return channelRepository.save(channel);

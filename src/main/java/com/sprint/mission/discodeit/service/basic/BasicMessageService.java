@@ -28,7 +28,7 @@ public class BasicMessageService implements MessageService {
     @Override
     public Message find(UUID id) {
         return messageRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("해당 메시지가 존재하지 않습니다."));
+                .orElseThrow(() -> new NoSuchElementException("[!] 해당 메시지가 존재하지 않습니다."));
     }
 
     @Override
@@ -51,7 +51,7 @@ public class BasicMessageService implements MessageService {
         Message message = find(id);
 
         if (!message.getAuthorId().equals(requestId)) {
-            throw new IllegalArgumentException("수정 권한이 없습니다.");
+            throw new IllegalArgumentException("[!] 수정 권한이 없습니다.");
         }
         message.updateContent(newContent);
         return messageRepository.save(message);
@@ -59,13 +59,13 @@ public class BasicMessageService implements MessageService {
 
     @Override
     public void delete(UUID id, UUID requestId) {
-        Message message = find(id);
-
-        if (!message.getAuthorId().equals(requestId)) {
-            throw new IllegalArgumentException("삭제 권한이 없습니다.");
-        }
         if (!messageRepository.existsById(id)) {
-            throw new NoSuchElementException("사용자가 존재하지 않습니다.");
+            throw new NoSuchElementException("[!] 메시지가 존재하지 않습니다.");
+        }
+
+        Message message = find(id);
+        if (!message.getAuthorId().equals(requestId)) {
+            throw new IllegalArgumentException("[!] 삭제 권한이 없습니다.");
         }
 
         messageRepository.delete(id);

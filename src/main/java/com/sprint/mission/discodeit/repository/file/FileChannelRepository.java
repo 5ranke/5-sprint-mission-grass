@@ -143,7 +143,7 @@ public class FileChannelRepository implements ChannelRepository {
 
     @Override
     public boolean existsById(UUID id) {
-        Path path = Paths.get(DIRECTORY, id.toString()+EXTENSION);
+        Path path = Paths.get(DIRECTORY, id.toString() + EXTENSION);
         return Files.exists(path);
     }
 }

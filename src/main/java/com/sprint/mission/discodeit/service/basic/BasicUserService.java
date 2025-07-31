@@ -38,7 +38,7 @@ public class BasicUserService implements UserService {
     @Override
     public User find(UUID id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("해당 사용자가 존재하지 않습니다."));
+                .orElseThrow(() -> new NoSuchElementException("[!] 해당 사용자가 존재하지 않습니다."));
     }
 
     @Override
@@ -49,7 +49,7 @@ public class BasicUserService implements UserService {
     @Override
     public User updateName(UUID targetId, UUID requestId, String newName) {
         if (!targetId.equals(requestId)) {
-            throw new IllegalArgumentException("수정 권한이 없습니다.");
+            throw new IllegalArgumentException("[!] 수정 권한이 없습니다.");
         }
         User user = find(targetId);
         user.updateName(newName);
@@ -59,7 +59,7 @@ public class BasicUserService implements UserService {
     @Override
     public User updatePw(UUID targetId, UUID requestId, String newPw) {
         if (!targetId.equals(requestId)) {
-            throw new IllegalArgumentException("수정 권한이 없습니다.");
+            throw new IllegalArgumentException("[!] 수정 권한이 없습니다.");
         }
         User user = find(targetId);
         user.updatePw(newPw);
@@ -68,11 +68,11 @@ public class BasicUserService implements UserService {
 
     @Override
     public void delete(UUID targetId, UUID requestId) {
-        if (!targetId.equals(requestId)) {
-            throw new IllegalArgumentException("삭제 권한이 없습니다.");
-        }
         if (!userRepository.existsById(targetId)) {
-            throw new NoSuchElementException("사용자가 존재하지 않습니다.");
+            throw new NoSuchElementException("[!] 사용자가 존재하지 않습니다.");
+        }
+        if (!targetId.equals(requestId)) {
+            throw new IllegalArgumentException("[!] 삭제 권한이 없습니다.");
         }
         userRepository.delete(targetId);
     }
