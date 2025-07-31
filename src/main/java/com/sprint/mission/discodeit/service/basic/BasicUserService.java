@@ -1,4 +1,4 @@
-package com.sprint.mission.discodeit.service.file;
+package com.sprint.mission.discodeit.service.basic;
 
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.repository.UserRepository;
@@ -8,11 +8,10 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
-public class FileUserService implements UserService {
-
+public class BasicUserService implements UserService {
     private final UserRepository userRepository;
 
-    public FileUserService(UserRepository userRepository) {
+    public BasicUserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -39,7 +38,7 @@ public class FileUserService implements UserService {
     @Override
     public User find(UUID id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("해당 user가 존재하지 않습니다."));
+                .orElseThrow(() -> new NoSuchElementException("해당 사용자가 존재하지 않습니다."));
     }
 
     @Override
@@ -72,10 +71,9 @@ public class FileUserService implements UserService {
         if (!targetId.equals(requestId)) {
             throw new IllegalArgumentException("삭제 권한이 없습니다.");
         }
-        if(!userRepository.existsById(targetId)) {
+        if (!userRepository.existsById(targetId)) {
             throw new NoSuchElementException("사용자가 존재하지 않습니다.");
         }
         userRepository.delete(targetId);
     }
-
 }

@@ -134,22 +134,19 @@ public class FileMessageRepository implements MessageRepository {
     }
 
     @Override
-    public Message delete(UUID id) {
-        Message message;
+    public void delete(UUID id) {
         Path path = Paths.get(DIRECTORY, id.toString() + EXTENSION);
-        try (FileInputStream fis = new FileInputStream(path.toFile());
-             ObjectInputStream ois = new ObjectInputStream(fis)) {
-            message = (Message) ois.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
 
         try {
             Files.delete(path);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
 
-        return message;
+    @Override
+    public boolean existsById(UUID id) {
+        Path path = Paths.get(DIRECTORY, id.toString()+EXTENSION);
+        return Files.exists(path);
     }
 }

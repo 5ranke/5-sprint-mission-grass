@@ -67,11 +67,10 @@ public class JCFUserService implements UserService {
     }
 
     @Override
-    public User delete(UUID targetId, UUID requestId) {
+    public void delete(UUID targetId, UUID requestId) {
         if (!data.get(requestId).getId().equals(targetId)) {
             throw new IllegalArgumentException("삭제 권한이 없습니다.");
         }
         data.remove(targetId);
-        return null;
     }
 }

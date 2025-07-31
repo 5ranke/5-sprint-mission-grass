@@ -80,30 +80,21 @@ public class FileUserRepository implements UserRepository {
 
 
     @Override
-    public User delete(UUID id) {
-        User user = null;
+    public void delete(UUID id) {
         Path path = Paths.get(DIRECTORY, id.toString() + EXTENSION);
-        try (FileInputStream fis = new FileInputStream(path.toFile());
-             ObjectInputStream ois = new ObjectInputStream(fis)) {
-            user = (User) ois.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
 
         try {
             Files.delete(path);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        return user;
     }
 
-//    @Override
-//    public boolean existsById(UUID id) {
-//        Path path = Paths.get(DIRECTORY, id.toString()+EXTENSION);
-//        return Files.exists(path);
-//    }
+    @Override
+    public boolean existsById(UUID id) {
+        Path path = Paths.get(DIRECTORY, id.toString()+EXTENSION);
+        return Files.exists(path);
+    }
 
     @Override
     public boolean existsByUserid(String userid) {

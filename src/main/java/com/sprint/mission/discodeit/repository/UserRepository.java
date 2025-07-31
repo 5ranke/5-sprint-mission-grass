@@ -14,9 +14,9 @@ public interface UserRepository {
 
     List<User> findAll();
 
-    User delete(UUID id);
+    void delete(UUID id);
 
-//    boolean existsById(UUID id); // 얜 왜 만들었지?
+    boolean existsById(UUID id);
 
     boolean existsByUserid(String userid);
 }

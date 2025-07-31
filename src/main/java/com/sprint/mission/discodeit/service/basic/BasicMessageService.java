@@ -1,4 +1,4 @@
-package com.sprint.mission.discodeit.service.file;
+package com.sprint.mission.discodeit.service.basic;
 
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.repository.MessageRepository;
@@ -8,13 +8,13 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
-public class FileMessageService implements MessageService {
-
+public class BasicMessageService implements MessageService {
     private final MessageRepository messageRepository;
 
-    public FileMessageService(MessageRepository messageRepository) {
+    public BasicMessageService(MessageRepository messageRepository) {
         this.messageRepository = messageRepository;
     }
+
 
     @Override
     public Message create(UUID authorId, UUID channelId, String content) {
@@ -28,7 +28,7 @@ public class FileMessageService implements MessageService {
     @Override
     public Message find(UUID id) {
         return messageRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("해당 message가 존재하지 않습니다."));
+                .orElseThrow(() -> new NoSuchElementException("해당 메시지가 존재하지 않습니다."));
     }
 
     @Override
@@ -63,6 +63,9 @@ public class FileMessageService implements MessageService {
 
         if (!message.getAuthorId().equals(requestId)) {
             throw new IllegalArgumentException("삭제 권한이 없습니다.");
+        }
+        if (!messageRepository.existsById(id)) {
+            throw new NoSuchElementException("사용자가 존재하지 않습니다.");
         }
 
         messageRepository.delete(id);

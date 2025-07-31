@@ -82,12 +82,11 @@ public class JCFMessageService implements MessageService {
     }
 
     @Override
-    public Message delete(UUID messageId, UUID requestId) {
+    public void delete(UUID messageId, UUID requestId) {
         if (!data.get(messageId).getAuthorId().equals(requestId)) {
             throw new IllegalArgumentException("삭제 권한이 없습니다.");
         }
         data.remove(messageId);
-        return null;
     }
 
 }

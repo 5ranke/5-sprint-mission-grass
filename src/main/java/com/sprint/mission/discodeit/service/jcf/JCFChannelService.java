@@ -79,12 +79,11 @@ public class JCFChannelService implements ChannelService {
     }
 
     @Override
-    public Channel delete(UUID id, UUID requestId) {
+    public void delete(UUID id, UUID requestId) {
         if (!data.get(id).getCreatorId().equals(requestId)) {
             throw new IllegalArgumentException("삭제 권한이 없습니다.");
         }
         data.remove(id);
-        return null;
     }
 
     @Override

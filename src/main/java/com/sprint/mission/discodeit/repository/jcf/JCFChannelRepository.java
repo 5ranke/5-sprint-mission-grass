@@ -4,6 +4,7 @@ import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class JCFChannelRepository implements ChannelRepository {
     private final Map<UUID, Channel> data;
@@ -20,10 +21,7 @@ public class JCFChannelRepository implements ChannelRepository {
 
     @Override
     public Optional<Channel> findById(UUID id) {
-        if (data.containsKey(id)) {
-            return Optional.of(data.get(id));
-        }
-        return Optional.empty();
+        return Optional.ofNullable(data.get(id));
     }
 
     @Override
@@ -33,32 +31,24 @@ public class JCFChannelRepository implements ChannelRepository {
 
     @Override
     public List<Channel> findChannel(String token) {
-        List<Channel> channelList = new ArrayList<>();
-        for (Channel channel : data.values()) {
-            if (channel.getName().contains(token)) {
-                channelList.add(channel);
-            }
-        }
-
-        if (channelList.isEmpty()) {
-            throw new NoSuchElementException("결과가 없습니다.");
-        }
-
-        return channelList;
+        return data.values().stream()
+                .filter(c -> c.getName().contains(token))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Channel delete(UUID id) {
-        return data.remove(id);
+    public void delete(UUID id) {
+        data.remove(id);
     }
 
     @Override
     public boolean existsByName(String name) {
-        for (Channel channel : data.values()) {
-            if (channel.getName().equals(name)) {
-                return true;
-            }
-        }
-        return false;
+        return data.values().stream()
+                .anyMatch(c -> c.getName().equals(name));
+    }
+
+    @Override
+    public boolean existsById(UUID id) {
+        return data.containsKey(id);
     }
 }

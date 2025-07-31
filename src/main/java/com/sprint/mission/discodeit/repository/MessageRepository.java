@@ -18,6 +18,9 @@ public interface MessageRepository {
 
     List<Message> findByContent(String token);
 
-    Message delete(UUID id);
+    void delete(UUID id);
+
+    boolean existsById(UUID id);
+
 
 }

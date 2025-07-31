@@ -18,7 +18,7 @@ public interface ChannelService {
 
     Channel update(UUID id, UUID requestId, String newName);
 
-    Channel delete(UUID id, UUID requestId);
+    void delete(UUID id, UUID requestId);
 
     Channel addMember(UUID id, UUID memberId, UUID requestId);
 

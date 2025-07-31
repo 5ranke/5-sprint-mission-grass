@@ -16,5 +16,5 @@ public interface UserService {
 
     User updatePw(UUID targetId, UUID requestId, String newPw);
 
-    User delete(UUID targetId, UUID requestId);
+    void delete(UUID targetId, UUID requestId);
 }

@@ -1,4 +1,4 @@
-package com.sprint.mission.discodeit.service.file;
+package com.sprint.mission.discodeit.service.basic;
 
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
@@ -8,11 +8,10 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
-public class FileChannelService implements ChannelService {
-
+public class BasicChannelService implements ChannelService {
     private final ChannelRepository channelRepository;
 
-    public FileChannelService(ChannelRepository channelRepository) {
+    public BasicChannelService(ChannelRepository channelRepository) {
         this.channelRepository = channelRepository;
     }
 
@@ -31,7 +30,7 @@ public class FileChannelService implements ChannelService {
     @Override
     public Channel find(UUID id) {
         return channelRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("해당 channel이 존재하지 않습니다."));
+                .orElseThrow(() -> new NoSuchElementException("해당 채널이 존재하지 않습니다."));
     }
 
     @Override
@@ -75,15 +74,14 @@ public class FileChannelService implements ChannelService {
     public Channel addMember(UUID id, UUID memberId, UUID requestId) {
         Channel channel = find(id);
 
-        List<UUID> memberList = findMembers(id);
-        for (UUID uuid : memberList) {
-            if (uuid.equals(memberId)) {
-                throw new IllegalArgumentException("이미 등록된 멤버입니다.");
-            }
-        }
         if (!channel.getCreatorId().equals(requestId)) {
             throw new IllegalArgumentException("멤버 추가 권한이 없습니다.");
         }
+
+        if (findMembers(id).contains(memberId)) {
+            throw new IllegalArgumentException("이미 등록된 멤버입니다.");
+        }
+
         channel.addMember(memberId);
         return channelRepository.save(channel);
     }
@@ -98,4 +96,5 @@ public class FileChannelService implements ChannelService {
         channel.removeMember(memberId);
         return channelRepository.save(channel);
     }
+
 }

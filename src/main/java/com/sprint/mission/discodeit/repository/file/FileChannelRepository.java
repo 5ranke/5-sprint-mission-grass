@@ -106,23 +106,14 @@ public class FileChannelRepository implements ChannelRepository {
     }
 
     @Override
-    public Channel delete(UUID id) {
-        Channel channel;
+    public void delete(UUID id) {
         Path path = Paths.get(DIRECTORY, id.toString() + EXTENSION);
-        try (FileInputStream fis = new FileInputStream(path.toFile());
-             ObjectInputStream ois = new ObjectInputStream(fis)) {
-            channel = (Channel) ois.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
 
         try {
             Files.delete(path);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        return channel;
     }
 
     @Override
@@ -148,5 +139,11 @@ public class FileChannelRepository implements ChannelRepository {
         }
 
         return false;
+    }
+
+    @Override
+    public boolean existsById(UUID id) {
+        Path path = Paths.get(DIRECTORY, id.toString()+EXTENSION);
+        return Files.exists(path);
     }
 }
