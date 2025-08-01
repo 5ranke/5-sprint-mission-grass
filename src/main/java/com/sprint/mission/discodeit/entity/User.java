@@ -2,6 +2,7 @@ package com.sprint.mission.discodeit.entity;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.*;
 
 public class User implements Serializable {
@@ -11,16 +12,18 @@ public class User implements Serializable {
     private final UUID id;
     private final Long createdAt;
     private Long updatedAt;
-    private final String userid;
-    private String pw;
-    private String name;
 
-    public User(String userid, String pw, String name) {
+    private String username;
+    private String email;
+    private String password;
+
+    public User(String username, String email, String password) {
         this.id = UUID.randomUUID();
-        this.createdAt = System.currentTimeMillis();
-        this.userid = userid;
-        this.pw = pw;
-        this.name = name;
+        this.createdAt = Instant.now().getEpochSecond();
+
+        this.username = username;
+        this.email = email;
+        this.password = password;
     }
 
     public UUID getId() {
@@ -35,54 +38,35 @@ public class User implements Serializable {
         return updatedAt;
     }
 
-    public String getUserid() {
-        return userid;
+    public String getUsername() {
+        return username;
     }
 
-    public String getPw() {
-        return pw;
+    public String getEmail() {
+        return email;
     }
 
-    public String getName() {
-        return name;
+    public String getPassword() {
+        return password;
     }
 
-    private void update() {
-        this.updatedAt = System.currentTimeMillis();
-    }
+    public void update(String newUsername, String newEmail, String newPassword) {
+        boolean anyValueUpdated = false;
+        if (newUsername != null && !newUsername.equals(this.username)) {
+            this.username = newUsername;
+            anyValueUpdated = true;
+        }
+        if (newEmail != null && !newEmail.equals(this.email)) {
+            this.email = newEmail;
+            anyValueUpdated = true;
+        }
+        if (newPassword != null && !newPassword.equals(this.password)) {
+            this.password = newPassword;
+            anyValueUpdated = true;
+        }
 
-    public void updateName(String newName) {
-        this.name = newName;
-        update();
-    }
-
-    public void updatePw(String newPw) {
-        this.pw = newPw;
-        update();
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("User{");
-        sb.append("id=").append(id);
-        sb.append(", createdAt=").append(createdAt);
-        sb.append(", updatedAt=").append(updatedAt);
-        sb.append(", userid='").append(userid).append('\'');
-        sb.append(", pw='").append(pw).append('\'');
-        sb.append(", name='").append(name).append('\'');
-        sb.append('}');
-        return sb.toString();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(createdAt, user.createdAt) && Objects.equals(updatedAt, user.updatedAt) && Objects.equals(userid, user.userid) && Objects.equals(pw, user.pw) && Objects.equals(name, user.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, createdAt, updatedAt, userid, pw, name);
+        if (anyValueUpdated) {
+            this.updatedAt = Instant.now().getEpochSecond();
+        }
     }
 }

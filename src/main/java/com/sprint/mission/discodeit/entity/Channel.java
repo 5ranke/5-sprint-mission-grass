@@ -2,6 +2,7 @@ package com.sprint.mission.discodeit.entity;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.*;
 
 public class Channel implements Serializable {
@@ -11,18 +12,27 @@ public class Channel implements Serializable {
     private final UUID id;
     private final Long createdAt;
     private Long updatedAt;
+
+    private ChannelType type;
     private String name;
     private final UUID creatorId;
-    private List<UUID> members;
+    private String description;
 
     public Channel(UUID creatorId, String name) {
         this.id = UUID.randomUUID();
-        this.createdAt = System.currentTimeMillis();
+        this.createdAt = Instant.now().getEpochSecond();
         this.name = name;
         this.creatorId = creatorId;
-        this.members = new ArrayList<>();
+    }
 
-        members.add(creatorId);
+    public Channel(ChannelType type, String name, UUID creatorId, String description) {
+        this.id = UUID.randomUUID();
+        this.createdAt = Instant.now().getEpochSecond();
+
+        this.type = type;
+        this.name = name;
+        this.creatorId = creatorId;
+        this.description = description;
     }
 
     public UUID getId() {
@@ -37,57 +47,35 @@ public class Channel implements Serializable {
         return updatedAt;
     }
 
-    public String getName() {
-        return name;
+    public ChannelType getType() {
+        return type;
     }
 
-    public List<UUID> getMembers() {
-        return members;
+    public String getName() {
+        return name;
     }
 
     public UUID getCreatorId() {
         return creatorId;
     }
 
-    private void update() {
-        this.updatedAt = System.currentTimeMillis();
+    public String getDescription() {
+        return description;
     }
 
-    public void updateName(String newName) {
-        this.name = newName;
-        update();
-    }
+    public void update(String newName, String newDescription) {
+        boolean anyValueUpdated = false;
+        if (newName != null && !newName.equals(this.name)) {
+            this.name = newName;
+            anyValueUpdated = true;
+        }
+        if (newDescription != null && !newDescription.equals(this.description)) {
+            this.description = newDescription;
+            anyValueUpdated = true;
+        }
 
-    public void addMember(UUID id) {
-        this.members.add(id);
-    }
-
-    public void removeMember(UUID id) {
-        members.remove(id);
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("Channel{");
-        sb.append("id=").append(id);
-        sb.append(", createdAt=").append(createdAt);
-        sb.append(", updatedAt=").append(updatedAt);
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", creatorId=").append(creatorId);
-        sb.append(", members=").append(members);
-        sb.append('}');
-        return sb.toString();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Channel channel = (Channel) o;
-        return Objects.equals(id, channel.id) && Objects.equals(createdAt, channel.createdAt) && Objects.equals(updatedAt, channel.updatedAt) && Objects.equals(name, channel.name) && Objects.equals(creatorId, channel.creatorId) && Objects.equals(members, channel.members);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, createdAt, updatedAt, name, creatorId, members);
+        if (anyValueUpdated) {
+            this.updatedAt = Instant.now().getEpochSecond();
+        }
     }
 }
