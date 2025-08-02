@@ -51,7 +51,7 @@ public class FileMessageService implements MessageService {
 
     @Override
     public List<Message> searchByContent(String token) {
-        return findAll().stream().filter(m->(m.getContent().contains(token))).toList();
+        return findAll().stream().filter(m -> (m.getContent().contains(token))).toList();
     }
 
     @Override

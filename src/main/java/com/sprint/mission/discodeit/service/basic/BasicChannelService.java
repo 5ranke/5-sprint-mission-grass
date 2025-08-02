@@ -24,7 +24,7 @@ public class BasicChannelService implements ChannelService {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("[!] 채널 이름이 null 이거나 비어있을 수 없습니다.");
         }
-        Channel channel = new Channel(type, name,authorId,description);
+        Channel channel = new Channel(type, name, authorId, description);
         return channelRepository.save(channel);
     }
 
@@ -51,14 +51,16 @@ public class BasicChannelService implements ChannelService {
         if (!channel.getAuthorId().equals(requestId)) {
             throw new IllegalArgumentException("[!] 수정 권한이 없습니다.");
         }
-        channel.update(newName,newDescription);
+        channel.update(newName, newDescription);
         return channelRepository.save(channel);
     }
 
     @Override
     public void delete(UUID id, UUID requestId) {
+        if (!channelRepository.existsById(id)) {
+            throw new NoSuchElementException("[!] 채널이 존재하지 않습니다.");
+        }
         Channel channel = find(id);
-
         if (!channel.getAuthorId().equals(requestId)) {
             throw new IllegalArgumentException("[!] 삭제 권한이 없습니다.");
         }

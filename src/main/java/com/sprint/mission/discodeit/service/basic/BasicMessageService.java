@@ -50,7 +50,7 @@ public class BasicMessageService implements MessageService {
 
     @Override
     public List<Message> searchByContent(String token) {
-        return findAll().stream().filter(m->(m.getContent().contains(token))).toList();
+        return findAll().stream().filter(m -> (m.getContent().contains(token))).toList();
     }
 
     @Override
@@ -66,12 +66,13 @@ public class BasicMessageService implements MessageService {
 
     @Override
     public void delete(UUID id, UUID requestId) {
+        if (!messageRepository.existsById(id)) {
+            throw new NoSuchElementException("[!] 메시지가 존재하지 않습니다.");
+        }
         Message message = find(id);
-
         if (!message.getAuthorId().equals(requestId)) {
             throw new IllegalArgumentException("[!] 삭제 권한이 없습니다.");
         }
-
         messageRepository.deleteById(id);
     }
 }

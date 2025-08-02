@@ -35,8 +35,8 @@ public class BasicUserService implements UserService {
         return userRepository.save(user);
     }
 
-    private boolean existsByUsername(String username){
-        return userRepository.findAll().stream().anyMatch(u->(u.getUsername().equals(username)));
+    private boolean existsByUsername(String username) {
+        return userRepository.findAll().stream().anyMatch(u -> (u.getUsername().equals(username)));
     }
 
     @Override
@@ -53,16 +53,16 @@ public class BasicUserService implements UserService {
     @Override
     public List<User> searchByUsernameOrEmail(String token) {
         return findAll().stream().filter(
-                u->(u.getUsername().contains(token) || u.getEmail().contains(token))).toList();
+                u -> (u.getUsername().contains(token) || u.getEmail().contains(token))).toList();
     }
 
     @Override
     public User update(UUID id, UUID requestId, String newUsername, String newEmail, String newPassword) {
         User user = find(id);
-        if(!id.equals(requestId)){
+        if (!id.equals(requestId)) {
             throw new IllegalArgumentException("[!] 수정 권한이 없습니다.");
         }
-        user.update(newUsername,newEmail,newPassword);
+        user.update(newUsername, newEmail, newPassword);
         return userRepository.save(user);
     }
 
@@ -71,7 +71,7 @@ public class BasicUserService implements UserService {
         if (!id.equals(requestId)) {
             throw new IllegalArgumentException("[!] 삭제 권한이 없습니다.");
         }
-        if(!userRepository.existsById(id)) {
+        if (!userRepository.existsById(id)) {
             throw new NoSuchElementException("[!] 사용자가 존재하지 않습니다.");
         }
         userRepository.deleteById(id);
