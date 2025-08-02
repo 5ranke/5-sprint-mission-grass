@@ -29,9 +29,13 @@ public class FileChannelRepository implements ChannelRepository {
         }
     }
 
+    private Path makePath(UUID id) {
+        return Paths.get(DIRECTORY, id.toString() + EXTENSION);
+    }
+
     @Override
     public Channel save(Channel channel) {
-        Path path = Paths.get(DIRECTORY, channel.getId() + EXTENSION);
+        Path path = makePath(channel.getId());
         try (FileOutputStream fos = new FileOutputStream(path.toFile());
              ObjectOutputStream oos = new ObjectOutputStream(fos)) {
             oos.writeObject(channel);
@@ -44,106 +48,46 @@ public class FileChannelRepository implements ChannelRepository {
 
     @Override
     public Optional<Channel> findById(UUID id) {
-        Channel channel = null;
-        Path path = Paths.get(DIRECTORY, id.toString() + EXTENSION);
+        Path path = makePath(id);
         try (FileInputStream fis = new FileInputStream(path.toFile());
              ObjectInputStream ois = new ObjectInputStream(fis)) {
-            channel = (Channel) ois.readObject();
+            return Optional.ofNullable((Channel) ois.readObject());
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-        return Optional.ofNullable(channel);
     }
 
     @Override
     public List<Channel> findAll() {
         List<Channel> channelList = new ArrayList<>();
 
-        File directory = new File(DIRECTORY);
+        File[] fileList = new File(DIRECTORY).listFiles();
+        if (fileList == null) return channelList;
 
-        File[] files = directory.listFiles();
-        if (files == null) return channelList;
-
-        for (File file : files) {
-            if (file.isFile() && file.getName().endsWith(EXTENSION)) {
-                try (FileInputStream fis = new FileInputStream(file);
-                     ObjectInputStream ois = new ObjectInputStream(fis)) {
-                    Channel channel = (Channel) ois.readObject();
-                    channelList.add(channel);
-                } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
+        for (File file : fileList) {
+            try (FileInputStream fis = new FileInputStream(file);
+                 ObjectInputStream ois = new ObjectInputStream(fis)) {
+                channelList.add((Channel) ois.readObject());
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
             }
         }
         return channelList;
-    }
-
-    @Override
-    public List<Channel> findChannel(String token) {
-        List<Channel> channelList = new ArrayList<>();
-
-        File directory = new File(DIRECTORY);
-        File[] files = directory.listFiles();
-
-        if (files == null) return channelList;
-
-        for (File file : files) {
-            if (file.isFile() && file.getName().endsWith(EXTENSION)) {
-                try (FileInputStream fis = new FileInputStream(file);
-                     ObjectInputStream ois = new ObjectInputStream(fis)) {
-                    Channel channel = (Channel) ois.readObject();
-
-                    if (channel.getName().contains(token)) {
-                        channelList.add(channel);
-                    }
-                } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        return channelList;
-    }
-
-    @Override
-    public void delete(UUID id) {
-        Path path = Paths.get(DIRECTORY, id.toString() + EXTENSION);
-
-        try {
-            Files.delete(path);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public boolean existsByName(String name) {
-        File directory = new File(DIRECTORY);
-        File[] files = directory.listFiles();
-
-        if (files == null) return false;
-
-        for (File file : files) {
-            if (file.isFile() && file.getName().endsWith(EXTENSION)) {
-                try (FileInputStream fis = new FileInputStream(file);
-                     ObjectInputStream ois = new ObjectInputStream(fis)) {
-                    Channel channel = (Channel) ois.readObject();
-
-                    if (channel.getName().equals(name)) {
-                        return true;
-                    }
-                } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        return false;
     }
 
     @Override
     public boolean existsById(UUID id) {
-        Path path = Paths.get(DIRECTORY, id.toString() + EXTENSION);
+        Path path = makePath(id);
         return Files.exists(path);
+    }
+
+    @Override
+    public void deleteById(UUID id) {
+        Path path = makePath(id);
+        try {
+            Files.delete(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

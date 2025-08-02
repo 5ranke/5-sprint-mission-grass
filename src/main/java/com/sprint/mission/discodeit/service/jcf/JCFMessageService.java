@@ -34,59 +34,32 @@ public class JCFMessageService implements MessageService {
 
     @Override
     public List<Message> findAll() {
-        List<Message> messagesist = new ArrayList<>(data.values());
-        if (messagesist.isEmpty()) {
+        if (data.isEmpty()) {
             throw new NoSuchElementException("결과가 없습니다.");
         }
-        return messagesist;
+        return new ArrayList<>(data.values());
     }
 
     @Override
-    public List<Message> findChannelMessage(UUID channelId) {
-        List<Message> messageList = new ArrayList<>();
-        for (UUID id : data.keySet()) {
-            if (data.get(id).getChannelId().equals(channelId)) {
-                messageList.add(data.get(id));
-            }
-        }
-
-        if (messageList.isEmpty()) {
-            throw new NoSuchElementException("결과가 없습니다.");
-        }
-
-        return messageList;
+    public List<Message> SearchByContent(String token) {
+        return data.values().stream().filter(m->(m.getContent().contains(token))).toList();
     }
 
     @Override
-    public List<Message> findByContent(String token) {
-        List<Message> messageList = new ArrayList<>();
-        for (UUID uuid : data.keySet()) {
-            if (data.get(uuid).getContent().contains(token)) {
-                messageList.add(data.get(uuid));
-            }
-        }
-        if (messageList.isEmpty()) {
-            throw new NoSuchElementException("결과가 없습니다.");
-        }
-        return messageList;
-    }
-
-    @Override
-    public Message updateContent(UUID messageId, UUID requestId, String newContent) {
-        if (!data.get(messageId).getAuthorId().equals(requestId)) {
+    public Message update(UUID id, UUID requestId, String newContent) {
+        Message message = data.get(id);
+        if (!data.get(id).getAuthorId().equals(requestId)) {
             throw new IllegalArgumentException("수정 권한이 없습니다.");
         }
-        Message message = data.get(messageId);
-        message.updateContent(newContent);
+        message.update(newContent);
         return message;
     }
 
     @Override
-    public void delete(UUID messageId, UUID requestId) {
-        if (!data.get(messageId).getAuthorId().equals(requestId)) {
+    public void delete(UUID id, UUID requestId) {
+        if (!data.get(id).getAuthorId().equals(requestId)) {
             throw new IllegalArgumentException("삭제 권한이 없습니다.");
         }
-        data.remove(messageId);
+        data.remove(id);
     }
-
 }

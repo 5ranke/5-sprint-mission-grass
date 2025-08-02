@@ -12,11 +12,9 @@ public interface MessageService {
 
     List<Message> findAll();
 
-    List<Message> findChannelMessage(UUID channelId);
+    List<Message> SearchByContent(String token);
 
-    List<Message> findByContent(String token);
-
-    Message updateContent(UUID id, UUID requestId, String newContent);
+    Message update(UUID id, UUID requestId, String newContent);
 
     void delete(UUID id, UUID requestId);
 }

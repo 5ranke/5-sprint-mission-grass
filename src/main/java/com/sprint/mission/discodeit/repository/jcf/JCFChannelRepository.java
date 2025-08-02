@@ -30,21 +30,8 @@ public class JCFChannelRepository implements ChannelRepository {
     }
 
     @Override
-    public List<Channel> findChannel(String token) {
-        return data.values().stream()
-                .filter(c -> c.getName().contains(token))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public void delete(UUID id) {
+    public void deleteById(UUID id) {
         data.remove(id);
-    }
-
-    @Override
-    public boolean existsByName(String name) {
-        return data.values().stream()
-                .anyMatch(c -> c.getName().equals(name));
     }
 
     @Override

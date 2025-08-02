@@ -21,6 +21,7 @@ public class FileMessageService implements MessageService {
         if (content == null || content.isBlank()) {
             throw new IllegalArgumentException("[!] 내용이 null 이거나 비어있을 수 없습니다.");
         }
+
         Message message = new Message(authorId, channelId, content);
         return messageRepository.save(message);
     }
@@ -37,23 +38,18 @@ public class FileMessageService implements MessageService {
     }
 
     @Override
-    public List<Message> findChannelMessage(UUID channelId) {
-        return messageRepository.findChannelMessage(channelId);
+    public List<Message> SearchByContent(String token) {
+        return findAll().stream().filter(m->(m.getContent().contains(token))).toList();
     }
 
     @Override
-    public List<Message> findByContent(String token) {
-        return messageRepository.findByContent(token);
-    }
-
-    @Override
-    public Message updateContent(UUID id, UUID requestId, String newContent) {
+    public Message update(UUID id, UUID requestId, String newContent) {
         Message message = find(id);
 
         if (!message.getAuthorId().equals(requestId)) {
             throw new IllegalArgumentException("수정 권한이 없습니다.");
         }
-        message.updateContent(newContent);
+        message.update(newContent);
         return messageRepository.save(message);
     }
 
@@ -65,6 +61,6 @@ public class FileMessageService implements MessageService {
             throw new IllegalArgumentException("삭제 권한이 없습니다.");
         }
 
-        messageRepository.delete(id);
+        messageRepository.deleteById(id);
     }
 }

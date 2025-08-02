@@ -29,10 +29,13 @@ public class FileMessageRepository implements MessageRepository {
         }
     }
 
+    private Path makePath(UUID id) {
+        return Paths.get(DIRECTORY, id.toString() + EXTENSION);
+    }
 
     @Override
     public Message save(Message message) {
-        Path path = Paths.get(DIRECTORY, message.getId() + EXTENSION);
+        Path path = makePath(message.getId());
         try (FileOutputStream fos = new FileOutputStream(path.toFile());
              ObjectOutputStream oos = new ObjectOutputStream(fos)) {
             oos.writeObject(message);
@@ -45,108 +48,46 @@ public class FileMessageRepository implements MessageRepository {
 
     @Override
     public Optional<Message> findById(UUID id) {
-        Message message = null;
-        Path path = Paths.get(DIRECTORY, id.toString() + EXTENSION);
+        Path path = makePath(id);
         try (FileInputStream fis = new FileInputStream(path.toFile());
              ObjectInputStream ois = new ObjectInputStream(fis)) {
-            message = (Message) ois.readObject();
+            return Optional.ofNullable((Message) ois.readObject());
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-        return Optional.ofNullable(message);
     }
 
     @Override
     public List<Message> findAll() {
         List<Message> messageList = new ArrayList<>();
 
-        File directory = new File(DIRECTORY);
+        File[] fileList = new File(DIRECTORY).listFiles();
+        if (fileList == null) return messageList;
 
-        File[] files = directory.listFiles();
-        if (files == null) return messageList;
-
-        for (File file : files) {
-            if (file.isFile() && file.getName().endsWith(EXTENSION)) {
-                try (FileInputStream fis = new FileInputStream(file);
-                     ObjectInputStream ois = new ObjectInputStream(fis)) {
-                    Message message = (Message) ois.readObject();
-                    messageList.add(message);
-                } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
+        for (File file : fileList) {
+            try (FileInputStream fis = new FileInputStream(file);
+                 ObjectInputStream ois = new ObjectInputStream(fis)) {
+                messageList.add((Message) ois.readObject());
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
             }
         }
         return messageList;
-    }
-
-    @Override
-    public List<Message> findChannelMessage(UUID channelId) {
-        List<Message> messageList = new ArrayList<>();
-
-        File directory = new File(DIRECTORY);
-        File[] files = directory.listFiles();
-
-        if (files == null) return messageList;
-
-        for (File file : files) {
-            if (file.isFile() && file.getName().endsWith(EXTENSION)) {
-                try (FileInputStream fis = new FileInputStream(file);
-                     ObjectInputStream ois = new ObjectInputStream(fis)) {
-                    Message message = (Message) ois.readObject();
-
-                    if (message.getChannelId().equals(channelId)) {
-                        messageList.add(message);
-                    }
-                } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        return messageList;
-    }
-
-    @Override
-    public List<Message> findByContent(String token) {
-        List<Message> messageList = new ArrayList<>();
-
-        File directory = new File(DIRECTORY);
-        File[] files = directory.listFiles();
-
-        if (files == null) return messageList;
-
-        for (File file : files) {
-            if (file.isFile() && file.getName().endsWith(EXTENSION)) {
-                try (FileInputStream fis = new FileInputStream(file);
-                     ObjectInputStream ois = new ObjectInputStream(fis)) {
-                    Message message = (Message) ois.readObject();
-
-                    if (message.getContent().contains(token)) {
-                        messageList.add(message);
-                    }
-                } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        return messageList;
-    }
-
-    @Override
-    public void delete(UUID id) {
-        Path path = Paths.get(DIRECTORY, id.toString() + EXTENSION);
-
-        try {
-            Files.delete(path);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Override
     public boolean existsById(UUID id) {
-        Path path = Paths.get(DIRECTORY, id.toString()+EXTENSION);
+        Path path = makePath(id);
         return Files.exists(path);
+    }
+
+    @Override
+    public void deleteById(UUID id) {
+        Path path = makePath(id);
+        try {
+            Files.delete(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

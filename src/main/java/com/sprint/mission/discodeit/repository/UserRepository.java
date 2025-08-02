@@ -1,5 +1,6 @@
 package com.sprint.mission.discodeit.repository;
 
+import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.entity.User;
 
 import java.util.List;
@@ -14,9 +15,7 @@ public interface UserRepository {
 
     List<User> findAll();
 
-    void delete(UUID id);
-
     boolean existsById(UUID id);
 
-    boolean existsByUserid(String userid);
+    void deleteById(UUID id);
 }

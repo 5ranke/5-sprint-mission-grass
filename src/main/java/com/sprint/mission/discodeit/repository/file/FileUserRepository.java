@@ -29,9 +29,13 @@ public class FileUserRepository implements UserRepository {
         }
     }
 
+    private Path makePath(UUID id) {
+        return Paths.get(DIRECTORY, id.toString() + EXTENSION);
+    }
+
     @Override
     public User save(User user) {
-        Path path = Paths.get(DIRECTORY, user.getId() + EXTENSION);
+        Path path = makePath(user.getId());
         try (FileOutputStream fos = new FileOutputStream(path.toFile());
              ObjectOutputStream oos = new ObjectOutputStream(fos)) {
             oos.writeObject(user);
@@ -44,35 +48,28 @@ public class FileUserRepository implements UserRepository {
 
     @Override
     public Optional<User> findById(UUID id) {
-        User user = null;
-        Path path = Paths.get(DIRECTORY, id.toString() + EXTENSION);
+        Path path = makePath(id);
         try (FileInputStream fis = new FileInputStream(path.toFile());
              ObjectInputStream ois = new ObjectInputStream(fis)) {
-            user = (User) ois.readObject();
+            return Optional.ofNullable((User) ois.readObject());
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-        return Optional.ofNullable(user);
     }
 
     @Override
     public List<User> findAll() {
         List<User> userList = new ArrayList<>();
 
-        File directory = new File(DIRECTORY);
+        File[] fileList = new File(DIRECTORY).listFiles();
+        if (fileList == null) return userList;
 
-        File[] files = directory.listFiles();
-        if (files == null) return userList;
-
-        for (File file : files) {
-            if (file.isFile() && file.getName().endsWith(EXTENSION)) {
-                try (FileInputStream fis = new FileInputStream(file);
-                     ObjectInputStream ois = new ObjectInputStream(fis)) {
-                    User user = (User) ois.readObject();
-                    userList.add(user);
-                } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
+        for (File file : fileList) {
+            try (FileInputStream fis = new FileInputStream(file);
+                 ObjectInputStream ois = new ObjectInputStream(fis)) {
+                userList.add((User) ois.readObject());
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
             }
         }
         return userList;
@@ -80,44 +77,18 @@ public class FileUserRepository implements UserRepository {
 
 
     @Override
-    public void delete(UUID id) {
-        Path path = Paths.get(DIRECTORY, id.toString() + EXTENSION);
-
-        try {
-            Files.delete(path);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
     public boolean existsById(UUID id) {
-        Path path = Paths.get(DIRECTORY, id.toString()+EXTENSION);
+        Path path = makePath(id);
         return Files.exists(path);
     }
 
     @Override
-    public boolean existsByUserid(String userid) {
-        File directory = new File(DIRECTORY);
-        File[] files = directory.listFiles();
-
-        if (files == null) return false;
-
-        for (File file : files) {
-            if (file.isFile() && file.getName().endsWith(EXTENSION)) {
-                try (FileInputStream fis = new FileInputStream(file);
-                     ObjectInputStream ois = new ObjectInputStream(fis)) {
-                    User user = (User) ois.readObject();
-
-                    if (user.getUserid().equals(userid)) {
-                        return true;
-                    }
-                } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
+    public void deleteById(UUID id) {
+        Path path = makePath(id);
+        try {
+            Files.delete(path);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-        return false;
     }
 }

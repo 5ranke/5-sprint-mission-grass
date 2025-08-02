@@ -29,18 +29,12 @@ public class JCFUserRepository implements UserRepository {
     }
 
     @Override
-    public void delete(UUID id) {
-        data.remove(id);
-    }
-
-    @Override
     public boolean existsById(UUID id) {
         return data.containsKey(id);
     }
 
     @Override
-    public boolean existsByUserid(String userid) {
-        return data.values().stream()
-                .anyMatch(u -> u.getUserid().equals(userid));
+    public void deleteById(UUID id) {
+        data.remove(id);
     }
 }

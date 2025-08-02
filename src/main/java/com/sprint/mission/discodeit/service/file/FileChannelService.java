@@ -1,6 +1,7 @@
 package com.sprint.mission.discodeit.service.file;
 
 import com.sprint.mission.discodeit.entity.Channel;
+import com.sprint.mission.discodeit.entity.ChannelType;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
 import com.sprint.mission.discodeit.service.ChannelService;
 
@@ -17,14 +18,11 @@ public class FileChannelService implements ChannelService {
     }
 
     @Override
-    public Channel create(UUID creatorId, String name) {
+    public Channel create(ChannelType type, String name, UUID authorId, String description) {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("[!] 채널 이름이 null 이거나 비어있을 수 없습니다.");
         }
-        if (channelRepository.existsByName(name)) {
-            throw new IllegalArgumentException("[!] 중복된 채널 이름이 있습니다.");
-        }
-        Channel channel = new Channel(creatorId, name);
+        Channel channel = new Channel(type, name,authorId,description);
         return channelRepository.save(channel);
     }
 
@@ -35,28 +33,23 @@ public class FileChannelService implements ChannelService {
     }
 
     @Override
-    public List<UUID> findMembers(UUID id) {
-        return find(id).getMembers();
-    }
-
-    @Override
     public List<Channel> findAll() {
         return channelRepository.findAll();
     }
 
     @Override
-    public List<Channel> findChannel(String token) {
-        return channelRepository.findChannel(token);
+    public List<Channel> SearchByName(String token) {
+        return findAll().stream().filter(c -> (c.getName().contains(token))).toList();
     }
 
     @Override
-    public Channel update(UUID id, UUID requestId, String newName) {
+    public Channel update(UUID id, UUID requestId, String newName, String newDescription) {
         Channel channel = find(id);
 
-        if (!channel.getCreatorId().equals(requestId)) {
+        if (!channel.getAuthorId().equals(requestId)) {
             throw new IllegalArgumentException("수정 권한이 없습니다.");
         }
-        channel.updateName(newName);
+        channel.update(newName,newDescription);
         return channelRepository.save(channel);
     }
 
@@ -64,38 +57,10 @@ public class FileChannelService implements ChannelService {
     public void delete(UUID id, UUID requestId) {
         Channel channel = find(id);
 
-        if (!channel.getCreatorId().equals(requestId)) {
+        if (!channel.getAuthorId().equals(requestId)) {
             throw new IllegalArgumentException("삭제 권한이 없습니다.");
         }
 
-        channelRepository.delete(id);
-    }
-
-    @Override
-    public Channel addMember(UUID id, UUID memberId, UUID requestId) {
-        Channel channel = find(id);
-
-        List<UUID> memberList = findMembers(id);
-        for (UUID uuid : memberList) {
-            if (uuid.equals(memberId)) {
-                throw new IllegalArgumentException("이미 등록된 멤버입니다.");
-            }
-        }
-        if (!channel.getCreatorId().equals(requestId)) {
-            throw new IllegalArgumentException("멤버 추가 권한이 없습니다.");
-        }
-        channel.addMember(memberId);
-        return channelRepository.save(channel);
-    }
-
-    @Override
-    public Channel removeMember(UUID id, UUID memberId, UUID requestId) {
-        Channel channel = find(id);
-
-        if (!channel.getCreatorId().equals(requestId)) {
-            throw new IllegalArgumentException("멤버 삭제 권한이 없습니다.");
-        }
-        channel.removeMember(memberId);
-        return channelRepository.save(channel);
+        channelRepository.deleteById(id);
     }
 }

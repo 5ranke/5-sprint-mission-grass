@@ -15,23 +15,23 @@ public class Channel implements Serializable {
 
     private ChannelType type;
     private String name;
-    private final UUID creatorId;
+    private final UUID authorId;
     private String description;
 
-    public Channel(UUID creatorId, String name) {
+    public Channel(UUID authorId, String name) {
         this.id = UUID.randomUUID();
         this.createdAt = Instant.now().getEpochSecond();
         this.name = name;
-        this.creatorId = creatorId;
+        this.authorId = authorId;
     }
 
-    public Channel(ChannelType type, String name, UUID creatorId, String description) {
+    public Channel(ChannelType type, String name, UUID authorId, String description) {
         this.id = UUID.randomUUID();
         this.createdAt = Instant.now().getEpochSecond();
 
         this.type = type;
         this.name = name;
-        this.creatorId = creatorId;
+        this.authorId = authorId;
         this.description = description;
     }
 
@@ -55,8 +55,8 @@ public class Channel implements Serializable {
         return name;
     }
 
-    public UUID getCreatorId() {
-        return creatorId;
+    public UUID getAuthorId() {
+        return authorId;
     }
 
     public String getDescription() {
