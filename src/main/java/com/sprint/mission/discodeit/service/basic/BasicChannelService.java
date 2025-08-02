@@ -4,6 +4,7 @@ import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.ChannelType;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
 import com.sprint.mission.discodeit.service.ChannelService;
+import com.sprint.mission.discodeit.service.UserService;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -11,9 +12,11 @@ import java.util.UUID;
 
 public class BasicChannelService implements ChannelService {
     private final ChannelRepository channelRepository;
+    private final UserService userService;
 
-    public BasicChannelService(ChannelRepository channelRepository) {
+    public BasicChannelService(ChannelRepository channelRepository, UserService userService) {
         this.channelRepository = channelRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -37,7 +40,7 @@ public class BasicChannelService implements ChannelService {
     }
 
     @Override
-    public List<Channel> SearchByName(String token) {
+    public List<Channel> searchByName(String token) {
         return findAll().stream().filter(c -> (c.getName().contains(token))).toList();
     }
 

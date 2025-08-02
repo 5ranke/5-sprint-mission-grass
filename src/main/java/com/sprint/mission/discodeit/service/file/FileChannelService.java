@@ -4,21 +4,28 @@ import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.ChannelType;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
 import com.sprint.mission.discodeit.service.ChannelService;
+import com.sprint.mission.discodeit.service.UserService;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
 public class FileChannelService implements ChannelService {
-
     private final ChannelRepository channelRepository;
+    private final UserService userService;
 
-    public FileChannelService(ChannelRepository channelRepository) {
+    public FileChannelService(ChannelRepository channelRepository, UserService userService) {
         this.channelRepository = channelRepository;
+        this.userService = userService;
     }
 
     @Override
     public Channel create(ChannelType type, String name, UUID authorId, String description) {
+        try {
+            userService.find(authorId);
+        } catch (NoSuchElementException e) {
+            throw e;
+        }
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("[!] 채널 이름이 null 이거나 비어있을 수 없습니다.");
         }
@@ -29,7 +36,7 @@ public class FileChannelService implements ChannelService {
     @Override
     public Channel find(UUID id) {
         return channelRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("해당 channel이 존재하지 않습니다."));
+                .orElseThrow(() -> new NoSuchElementException("[!] 해당 channel이 존재하지 않습니다."));
     }
 
     @Override
@@ -38,7 +45,7 @@ public class FileChannelService implements ChannelService {
     }
 
     @Override
-    public List<Channel> SearchByName(String token) {
+    public List<Channel> searchByName(String token) {
         return findAll().stream().filter(c -> (c.getName().contains(token))).toList();
     }
 
@@ -47,7 +54,7 @@ public class FileChannelService implements ChannelService {
         Channel channel = find(id);
 
         if (!channel.getAuthorId().equals(requestId)) {
-            throw new IllegalArgumentException("수정 권한이 없습니다.");
+            throw new IllegalArgumentException("[!] 수정 권한이 없습니다.");
         }
         channel.update(newName,newDescription);
         return channelRepository.save(channel);
@@ -58,7 +65,7 @@ public class FileChannelService implements ChannelService {
         Channel channel = find(id);
 
         if (!channel.getAuthorId().equals(requestId)) {
-            throw new IllegalArgumentException("삭제 권한이 없습니다.");
+            throw new IllegalArgumentException("[!] 삭제 권한이 없습니다.");
         }
 
         channelRepository.deleteById(id);

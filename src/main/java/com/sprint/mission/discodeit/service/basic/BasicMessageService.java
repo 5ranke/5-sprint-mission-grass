@@ -2,7 +2,9 @@ package com.sprint.mission.discodeit.service.basic;
 
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.repository.MessageRepository;
+import com.sprint.mission.discodeit.service.ChannelService;
 import com.sprint.mission.discodeit.service.MessageService;
+import com.sprint.mission.discodeit.service.UserService;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -10,13 +12,23 @@ import java.util.UUID;
 
 public class BasicMessageService implements MessageService {
     private final MessageRepository messageRepository;
+    private final ChannelService channelService;
+    private final UserService userService;
 
-    public BasicMessageService(MessageRepository messageRepository) {
+    public BasicMessageService(MessageRepository messageRepository, ChannelService channelService, UserService userService) {
         this.messageRepository = messageRepository;
+        this.channelService = channelService;
+        this.userService = userService;
     }
 
     @Override
     public Message create(UUID authorId, UUID channelId, String content) {
+        try {
+            channelService.find(channelId);
+            userService.find(authorId);
+        } catch (NoSuchElementException e) {
+            throw e;
+        }
         if (content == null || content.isBlank()) {
             throw new IllegalArgumentException("[!] 내용이 null 이거나 비어있을 수 없습니다.");
         }
@@ -37,7 +49,7 @@ public class BasicMessageService implements MessageService {
     }
 
     @Override
-    public List<Message> SearchByContent(String token) {
+    public List<Message> searchByContent(String token) {
         return findAll().stream().filter(m->(m.getContent().contains(token))).toList();
     }
 

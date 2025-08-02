@@ -12,7 +12,7 @@ public interface MessageService {
 
     List<Message> findAll();
 
-    List<Message> SearchByContent(String token);
+    List<Message> searchByContent(String token);
 
     Message update(UUID id, UUID requestId, String newContent);
 

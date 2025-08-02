@@ -51,7 +51,7 @@ public class BasicUserService implements UserService {
     }
 
     @Override
-    public List<User> SearchByUsernameOrEmail(String token) {
+    public List<User> searchByUsernameOrEmail(String token) {
         return findAll().stream().filter(
                 u->(u.getUsername().contains(token) || u.getEmail().contains(token))).toList();
     }

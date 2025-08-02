@@ -26,7 +26,7 @@ public class JCFUserService implements UserService {
 
         for (UUID id : data.keySet()) {
             if (data.get(id).getUsername().equals(username)) {
-                throw new IllegalArgumentException("id가 중복입니다.");
+                throw new IllegalArgumentException("[!] 중복된 id가 있습니다.");
             }
         }
         User user = new User(username, email, password);
@@ -38,7 +38,7 @@ public class JCFUserService implements UserService {
     @Override
     public User find(UUID id) {
         if (!data.containsKey(id)) {
-            throw new NoSuchElementException("유저가 없습니다.");
+            throw new NoSuchElementException("[!] 사용자가 없습니다.");
         }
         return data.get(id);
     }
@@ -46,31 +46,31 @@ public class JCFUserService implements UserService {
     @Override
     public List<User> findAll() {
         if (data.isEmpty()) {
-            throw new NoSuchElementException("결과가 없습니다.");
+            throw new NoSuchElementException("[!] 결과가 없습니다.");
         }
         return new ArrayList<>(data.values());
     }
 
     @Override
-    public List<User> SearchByUsernameOrEmail(String token) {
+    public List<User> searchByUsernameOrEmail(String token) {
         return data.values().stream().filter(
-                u->(u.getUsername().contains(token) || u.getEmail().contains(token))).toList();
+                u -> (u.getUsername().contains(token) || u.getEmail().contains(token))).toList();
     }
 
     @Override
     public User update(UUID id, UUID requestId, String newUsername, String newEmail, String newPassword) {
         User user = data.get(id);
-        if(!id.equals(requestId)){
-            throw new IllegalArgumentException("수정 권한이 없습니다.");
+        if (!id.equals(requestId)) {
+            throw new IllegalArgumentException("[!] 수정 권한이 없습니다.");
         }
-        user.update(newUsername,newEmail,newPassword);
+        user.update(newUsername, newEmail, newPassword);
         return user;
     }
 
     @Override
     public void delete(UUID id, UUID requestId) {
-        if(!id.equals(requestId)){
-            throw new IllegalArgumentException("삭제 권한이 없습니다.");
+        if (!id.equals(requestId)) {
+            throw new IllegalArgumentException("[!] 삭제 권한이 없습니다.");
         }
         data.remove(id);
     }

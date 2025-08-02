@@ -13,10 +13,9 @@ public interface ChannelService {
 
     List<Channel> findAll();
 
-    List<Channel> SearchByName(String token);
+    List<Channel> searchByName(String token);
 
     Channel update(UUID id, UUID requestId, String newName, String newDescription);
 
     void delete(UUID id, UUID requestId);
-
 }

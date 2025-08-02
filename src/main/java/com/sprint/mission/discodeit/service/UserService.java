@@ -12,7 +12,7 @@ public interface UserService {
 
     List<User> findAll();
 
-    List<User> SearchByUsernameOrEmail(String token);
+    List<User> searchByUsernameOrEmail(String token);
 
     User update(UUID id, UUID requestId, String newUsername, String newEmail, String newPassword);
 
