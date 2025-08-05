@@ -1,7 +1,9 @@
 package com.sprint.mission.discodeit.service.basic;
 
 import com.sprint.mission.discodeit.entity.Message;
+import com.sprint.mission.discodeit.repository.ChannelRepository;
 import com.sprint.mission.discodeit.repository.MessageRepository;
+import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.service.ChannelService;
 import com.sprint.mission.discodeit.service.MessageService;
 import com.sprint.mission.discodeit.service.UserService;
@@ -12,20 +14,20 @@ import java.util.UUID;
 
 public class BasicMessageService implements MessageService {
     private final MessageRepository messageRepository;
-    private final ChannelService channelService;
-    private final UserService userService;
+    private final ChannelRepository channelRepository;
+    private final UserRepository userRepository;
 
-    public BasicMessageService(MessageRepository messageRepository, ChannelService channelService, UserService userService) {
+    public BasicMessageService(MessageRepository messageRepository, ChannelRepository channelRepository, UserRepository userRepository) {
         this.messageRepository = messageRepository;
-        this.channelService = channelService;
-        this.userService = userService;
+        this.channelRepository = channelRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
     public Message create(UUID authorId, UUID channelId, String content) {
         try {
-            channelService.find(channelId);
-            userService.find(authorId);
+            channelRepository.findById(channelId);
+            userRepository.findById(authorId);
         } catch (NoSuchElementException e) {
             throw e;
         }

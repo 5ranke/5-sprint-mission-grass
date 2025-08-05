@@ -3,6 +3,7 @@ package com.sprint.mission.discodeit.service.basic;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.entity.ChannelType;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
+import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.service.ChannelService;
 import com.sprint.mission.discodeit.service.UserService;
 
@@ -12,15 +13,20 @@ import java.util.UUID;
 
 public class BasicChannelService implements ChannelService {
     private final ChannelRepository channelRepository;
-    private final UserService userService;
+    private final UserRepository userRepository;
 
-    public BasicChannelService(ChannelRepository channelRepository, UserService userService) {
+    public BasicChannelService(ChannelRepository channelRepository, UserRepository userRepository) {
         this.channelRepository = channelRepository;
-        this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     @Override
     public Channel create(ChannelType type, String name, UUID authorId, String description) {
+        try {
+            userRepository.findById(authorId);
+        } catch (NoSuchElementException e) {
+            throw e;
+        }
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("[!] 채널 이름이 null 이거나 비어있을 수 없습니다.");
         }
