@@ -5,7 +5,6 @@ import com.sprint.mission.discodeit.entity.ChannelType;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.service.ChannelService;
-import com.sprint.mission.discodeit.service.UserService;
 
 import java.util.List;
 import java.util.NoSuchElementException;
