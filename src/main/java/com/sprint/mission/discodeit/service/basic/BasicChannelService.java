@@ -5,19 +5,18 @@ import com.sprint.mission.discodeit.entity.ChannelType;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.service.ChannelService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
+@Service
+@RequiredArgsConstructor
 public class BasicChannelService implements ChannelService {
     private final ChannelRepository channelRepository;
     private final UserRepository userRepository;
-
-    public BasicChannelService(ChannelRepository channelRepository, UserRepository userRepository) {
-        this.channelRepository = channelRepository;
-        this.userRepository = userRepository;
-    }
 
     @Override
     public Channel create(ChannelType type, String name, UUID authorId, String description) {

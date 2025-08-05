@@ -1,53 +1,20 @@
 package com.sprint.mission.discodeit.entity;
 
-import java.io.Serial;
-import java.io.Serializable;
-import java.time.Instant;
-import java.util.*;
+import lombok.Getter;
 
-public class User implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
+import java.util.UUID;
 
-    private final UUID id;
-    private final Long createdAt;
-    private Long updatedAt;
-
+@Getter
+public class User extends BaseEntity{
     private String username;
     private String email;
     private String password;
+    private UUID profield;
 
     public User(String username, String email, String password) {
-        this.id = UUID.randomUUID();
-        this.createdAt = Instant.now().getEpochSecond();
-
         this.username = username;
         this.email = email;
         this.password = password;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public Long getCreatedAt() {
-        return createdAt;
-    }
-
-    public Long getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public void update(String newUsername, String newEmail, String newPassword) {
@@ -66,7 +33,7 @@ public class User implements Serializable {
         }
 
         if (anyValueUpdated) {
-            this.updatedAt = Instant.now().getEpochSecond();
+            super.update();
         }
     }
 }
