@@ -1,6 +1,10 @@
 package com.sprint.mission.discodeit.service.basic;
 
-import com.sprint.mission.discodeit.entity.Message;
+import com.sprint.mission.discodeit.dto.MessageCreateDto;
+import com.sprint.mission.discodeit.dto.MessageUpdateDto;
+import com.sprint.mission.discodeit.dto.MessageViewDto;
+import com.sprint.mission.discodeit.entity.*;
+import com.sprint.mission.discodeit.repository.BinaryContentRepository;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
 import com.sprint.mission.discodeit.repository.MessageRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
@@ -8,9 +12,8 @@ import com.sprint.mission.discodeit.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -18,59 +21,82 @@ public class BasicMessageService implements MessageService {
     private final MessageRepository messageRepository;
     private final ChannelRepository channelRepository;
     private final UserRepository userRepository;
+    private final BinaryContentRepository binaryContentRepository;
 
     @Override
-    public Message create(UUID authorId, UUID channelId, String content) {
+    public MessageViewDto create(MessageCreateDto dto) {
         try {
-            channelRepository.findById(channelId);
-            userRepository.findById(authorId);
+            channelRepository.findById(dto.channelId());
+            userRepository.findById(dto.authorId());
         } catch (NoSuchElementException e) {
             throw e;
         }
-        if (content == null || content.isBlank()) {
-            throw new IllegalArgumentException("[!] 내용이 null 이거나 비어있을 수 없습니다.");
+        List<UUID> attachmentList = new ArrayList<>();
+        if(dto.binaryContents() != null) {
+            for (BinaryContent binaryContent : dto.binaryContents()) {
+                binaryContentRepository.save(binaryContent);
+                attachmentList.add(binaryContent.getId());
+            }
         }
+        Message message = new Message(dto.authorId(), dto.channelId(), dto.content(), attachmentList);
 
-        Message message = new Message(authorId, channelId, content);
-        return messageRepository.save(message);
+        messageRepository.save(message);
+        return messageViewDto(message);
     }
 
     @Override
-    public Message find(UUID id) {
-        return messageRepository.findById(id)
+    public MessageViewDto find(UUID id) {
+        Message message = messageRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("[!] 해당 message가 존재하지 않습니다."));
+        return messageViewDto(message);
     }
 
     @Override
-    public List<Message> findAll() {
-        return messageRepository.findAll();
+    public List<MessageViewDto> findAllByChannelId(UUID channelId) {
+        List<Message> messageList = messageRepository.findByChannelId(channelId);
+
+        return messageList.stream()
+                .map(this::messageViewDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Message> searchByContent(String token) {
-        return findAll().stream().filter(m -> (m.getContent().contains(token))).toList();
-    }
+    public MessageViewDto update(MessageUpdateDto dto) { // BinaryContents로 들어옴
+        Message message = messageRepository.findById(dto.id())
+                .orElseThrow(() -> new NoSuchElementException("[!] 해당 message가 존재하지 않습니다."));
 
-    @Override
-    public Message update(UUID id, UUID requestId, String newContent) {
-        Message message = find(id);
-
-        if (!message.getAuthorId().equals(requestId)) {
-            throw new IllegalArgumentException("[!] 수정 권한이 없습니다.");
+        List<UUID> newAttachmentList = new ArrayList<>();
+        if(dto.newBinaryContents() != null) {
+            for (BinaryContent binaryContent : dto.newBinaryContents()) {
+                binaryContentRepository.save(binaryContent);
+                newAttachmentList.add(binaryContent.getId());
+            }
         }
-        message.update(newContent);
-        return messageRepository.save(message);
+        message.update(dto.newContent(), newAttachmentList);
+        messageRepository.save(message);
+        return messageViewDto(message);
     }
 
     @Override
-    public void delete(UUID id, UUID requestId) {
-        if (!messageRepository.existsById(id)) {
-            throw new NoSuchElementException("[!] 메시지가 존재하지 않습니다.");
-        }
-        Message message = find(id);
-        if (!message.getAuthorId().equals(requestId)) {
-            throw new IllegalArgumentException("[!] 삭제 권한이 없습니다.");
+    public void delete(UUID id) {
+        messageRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("[!] 해당 message가 존재하지 않습니다."));
+        List<BinaryContent> binaryContents = binaryContentRepository.findByMessageId(id);
+        if(binaryContents != null) {
+            for (BinaryContent binaryContent : binaryContents) {
+                binaryContentRepository.deleteById(binaryContent.getId());
+            }
         }
         messageRepository.deleteById(id);
+    }
+
+    private MessageViewDto messageViewDto(Message message) {
+        return new MessageViewDto(
+                message.getId(),
+                message.getAuthorId(),
+                message.getChannelId(),
+                message.getContent(),
+                message.getAttachmentIds()
+        );
     }
 }

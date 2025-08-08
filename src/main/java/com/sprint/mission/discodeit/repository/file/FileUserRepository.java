@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 @Repository
 public class FileUserRepository implements UserRepository {
@@ -48,6 +49,7 @@ public class FileUserRepository implements UserRepository {
         return user;
     }
 
+    // TODO 공통 로직을 따로 뺄 수 있을 것 같다
     @Override
     public Optional<User> findById(UUID id) {
         Path path = makePath(id);
@@ -60,11 +62,34 @@ public class FileUserRepository implements UserRepository {
     }
 
     @Override
+    public Optional<User> findByUsername(String username) {
+        File[] fileList = new File(DIRECTORY).listFiles();
+        if (fileList == null) {
+            return Optional.empty();
+        }
+
+        for (File file : fileList) {
+            try (FileInputStream fis = new FileInputStream(file);
+                 ObjectInputStream ois = new ObjectInputStream(fis)) {
+                User user = (User) ois.readObject();
+                if(user.getUsername().equals(username)){
+                    return Optional.of(user);
+                }
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        return Optional.empty();
+    }
+
+    @Override
     public List<User> findAll() {
         List<User> userList = new ArrayList<>();
 
         File[] fileList = new File(DIRECTORY).listFiles();
-        if (fileList == null) return userList;
+        if (fileList == null) {
+            return userList;
+        }
 
         for (File file : fileList) {
             try (FileInputStream fis = new FileInputStream(file);
@@ -82,6 +107,38 @@ public class FileUserRepository implements UserRepository {
     public boolean existsById(UUID id) {
         Path path = makePath(id);
         return Files.exists(path);
+    }
+
+    @Override
+    public boolean existsByUsername(String username) {
+        return existsByCondition(user -> user.getUsername().equals(username));
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return existsByCondition(user -> user.getEmail().equals(email));
+    }
+
+    private boolean existsByCondition(Predicate<User> condition) {
+        File[] fileList = new File(DIRECTORY).listFiles();
+        if (fileList == null) {
+            return false;
+        }
+
+        for (File file : fileList) {
+            try (
+                    FileInputStream fis = new FileInputStream(file);
+                    ObjectInputStream ois = new ObjectInputStream(fis)
+            ) {
+                User user = (User) ois.readObject();
+                if (condition.test(user)) {
+                    return true;
+                }
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
     }
 
     @Override

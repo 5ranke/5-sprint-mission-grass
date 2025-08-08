@@ -24,6 +24,11 @@ public class JCFUserRepository implements UserRepository {
     }
 
     @Override
+    public Optional<User> findByUsername(String username) {
+        return Optional.empty();
+    }
+
+    @Override
     public List<User> findAll() {
         return new ArrayList<>(data.values());
     }
@@ -31,6 +36,16 @@ public class JCFUserRepository implements UserRepository {
     @Override
     public boolean existsById(UUID id) {
         return data.containsKey(id);
+    }
+
+    @Override
+    public boolean existsByUsername(String username) {
+        return false;
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return false;
     }
 
     @Override

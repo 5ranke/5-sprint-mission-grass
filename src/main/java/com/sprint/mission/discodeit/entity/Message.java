@@ -10,16 +10,21 @@ public class Message extends BaseEntity{
     private String content;
     private List<UUID> attachmentIds;
 
-    public Message(UUID authorId, UUID channelId, String content) {
+    public Message(UUID authorId, UUID channelId, String content, List<UUID> attachmentIds) {
         this.authorId = authorId;
         this.channelId = channelId;
         this.content = content;
+        this.attachmentIds = (attachmentIds == null)? new ArrayList<>() : attachmentIds;
     }
 
-    public void update(String newContent) {
+    public void update(String newContent, List<UUID> newAttachmentIds) {
         boolean anyValueUpdated = false;
         if (newContent != null && !newContent.equals(this.content)) {
             this.content = newContent;
+            anyValueUpdated = true;
+        }
+        if(attachmentIds != null) {
+            this.attachmentIds.addAll(newAttachmentIds);
             anyValueUpdated = true;
         }
 
