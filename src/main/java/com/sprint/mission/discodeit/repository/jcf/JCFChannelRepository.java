@@ -1,6 +1,7 @@
 package com.sprint.mission.discodeit.repository.jcf;
 
 import com.sprint.mission.discodeit.entity.Channel;
+import com.sprint.mission.discodeit.entity.ChannelType;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
 
 import java.util.*;
@@ -21,6 +22,11 @@ public class JCFChannelRepository implements ChannelRepository {
     @Override
     public Optional<Channel> findById(UUID id) {
         return Optional.ofNullable(data.get(id));
+    }
+
+    @Override
+    public List<Channel> findByType(ChannelType type) {
+        return List.of();
     }
 
     @Override
