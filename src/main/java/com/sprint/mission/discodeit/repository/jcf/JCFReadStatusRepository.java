@@ -1,13 +1,12 @@
 package com.sprint.mission.discodeit.repository.jcf;
 
 import com.sprint.mission.discodeit.entity.ReadStatus;
-import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.repository.ReadStatusRepository;
 
 import java.util.*;
 
 public class JCFReadStatusRepository implements ReadStatusRepository {
-    private final Map<UUID, User> data;
+    private final Map<UUID, ReadStatus> data;
 
     public JCFReadStatusRepository() {
         data = new HashMap<>();
@@ -15,36 +14,39 @@ public class JCFReadStatusRepository implements ReadStatusRepository {
 
     @Override
     public ReadStatus save(ReadStatus readStatus) {
-        return null;
+        data.put(readStatus.getId(), readStatus);
+        return readStatus;
     }
 
     @Override
     public Optional<ReadStatus> findById(UUID id) {
-        return Optional.empty();
+        return Optional.ofNullable(data.get(id));
     }
 
     @Override
     public List<ReadStatus> findByChannelId(UUID channelId) {
-        return List.of();
+        return data.values().stream().filter(
+                rs -> (rs.getChannelId().equals(channelId))).toList();
     }
 
     @Override
     public List<ReadStatus> findByUserId(UUID userId) {
-        return List.of();
+        return data.values().stream().filter(
+                rs -> (rs.getUserId().equals(userId))).toList();
     }
 
     @Override
     public List<ReadStatus> findAll() {
-        return List.of();
+        return new ArrayList<>(data.values());
     }
 
     @Override
     public boolean existsById(UUID id) {
-        return false;
+        return data.containsKey(id);
     }
 
     @Override
     public void deleteById(UUID id) {
-
+        data.remove(id);
     }
 }

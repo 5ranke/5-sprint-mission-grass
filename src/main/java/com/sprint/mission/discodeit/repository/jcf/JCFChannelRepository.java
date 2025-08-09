@@ -26,7 +26,8 @@ public class JCFChannelRepository implements ChannelRepository {
 
     @Override
     public List<Channel> findByType(ChannelType type) {
-        return List.of();
+        return data.values().stream().filter(
+                m -> (m.getType().equals(type))).toList();
     }
 
     @Override

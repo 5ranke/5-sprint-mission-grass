@@ -7,7 +7,7 @@ import com.sprint.mission.discodeit.repository.BinaryContentRepository;
 import java.util.*;
 
 public class JCFBinaryContentRepository implements BinaryContentRepository {
-    private final Map<UUID, User> data;
+    private final Map<UUID, BinaryContent> data;
 
     public JCFBinaryContentRepository() {
         data = new HashMap<>();
@@ -16,31 +16,27 @@ public class JCFBinaryContentRepository implements BinaryContentRepository {
 
     @Override
     public BinaryContent save(BinaryContent binaryContent) {
-        return null;
+        data.put(binaryContent.getId(), binaryContent);
+        return binaryContent;
     }
 
     @Override
     public Optional<BinaryContent> findById(UUID id) {
-        return Optional.empty();
-    }
-
-    @Override
-    public List<BinaryContent> findByMessageId(UUID messageId) {
-        return List.of();
+        return Optional.ofNullable(data.get(id));
     }
 
     @Override
     public List<BinaryContent> findAll() {
-        return List.of();
+        return new ArrayList<>(data.values());
     }
 
     @Override
     public boolean existsById(UUID id) {
-        return false;
+        return data.containsKey(id);
     }
 
     @Override
     public void deleteById(UUID id) {
-
+        data.remove(id);
     }
 }
