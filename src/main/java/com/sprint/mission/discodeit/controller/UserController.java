@@ -84,7 +84,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     } // 응답 데이터에 아무런 정보가 없을 때에는 No Content를 의미하는 204 상태코드를 사용합니다.
 
-    @RequestMapping("/findall")
+    @RequestMapping("/findAll")
     public ResponseEntity<List<UserDto>> findAll() {
         List<UserDto> users = userService.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(users);
