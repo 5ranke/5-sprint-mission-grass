@@ -83,7 +83,7 @@ public class MessageController {
                     responseCode = "404",
                     description = "Channel 또는 User를 찾을 수 없음",
                     content = @Content(
-                            mediaType = "text/plain",
+                            mediaType = "*/*",
                             examples = @ExampleObject(value = "Channel | Author with id {channelId | authorId} not found")
                     )
             )
@@ -133,18 +133,22 @@ public class MessageController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Message가 성공적으로 수정됨",
-                    content = @Content(mediaType = "application/json",
+                    content = @Content(mediaType = "*/*",
                             schema = @Schema(implementation = Message.class))
             ),
             @ApiResponse(
                     responseCode = "404",
                     description = "Message를 찾을 수 없음",
-                    content = @Content(mediaType = "text/plain",
+                    content = @Content(mediaType = "*/*",
                             examples = @ExampleObject(value = "Message with id {messageId} not found"))
             )
     })
     @PatchMapping(path = "/{messageId}", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Message> update (
+            @Parameter(
+                    description = "수정할 Message ID",
+                    schema = @Schema(type = "string", format = "uuid")
+            )
             @PathVariable("messageId") UUID messageId,
             @Valid @RequestBody MessageUpdateRequest messageUpdateRequest
             ) {
@@ -165,12 +169,16 @@ public class MessageController {
             @ApiResponse(
                     responseCode = "404",
                     description = "Message를 찾을 수 없음",
-                    content = @Content(mediaType = "text/plain",
+                    content = @Content(mediaType = "*/*",
                             examples = @ExampleObject(value = "Message with id {messageId} not found"))
             )
     })
     @DeleteMapping("/{messageId}")
     public ResponseEntity<Void> delete (
+            @Parameter(
+                    description = "삭제할 Message ID",
+                    schema = @Schema(type = "string", format = "uuid")
+            )
             @PathVariable("messageId") UUID messageId
     ) {
         messageService.delete(messageId);

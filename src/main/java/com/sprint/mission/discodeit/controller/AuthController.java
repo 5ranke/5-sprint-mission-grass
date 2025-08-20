@@ -45,7 +45,7 @@ public class AuthController {
                     responseCode = "404",
                     description = "사용자를 찾을 수 없음",
                     content = @Content(
-                            mediaType = "text/plain",
+                            mediaType = "*/*",
                             examples = @ExampleObject(value = "User with username {username} not found")
                     )
             ),
@@ -53,7 +53,7 @@ public class AuthController {
                     responseCode = "400",
                     description = "비밀번호가 일치하지 않음",
                     content = @Content(
-                            mediaType = "text/plain",
+                            mediaType = "*/*",
                             examples = @ExampleObject(value = "Wrong password")
                     )
             )

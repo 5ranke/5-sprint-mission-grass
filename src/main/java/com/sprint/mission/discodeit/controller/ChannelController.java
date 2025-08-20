@@ -7,6 +7,7 @@ import com.sprint.mission.discodeit.dto.request.PublicChannelUpdateRequest;
 import com.sprint.mission.discodeit.entity.Channel;
 import com.sprint.mission.discodeit.service.ChannelService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -88,23 +89,28 @@ public class ChannelController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Channel 정보가 성공적으로 수정됨",
-                    content = @Content(schema = @Schema(implementation = Channel.class))
+                    content = @Content(mediaType = "*/*",
+                            schema = @Schema(implementation = Channel.class))
             ),
             @ApiResponse(
                     responseCode = "404",
                     description = "Channel을 찾을 수 없음",
-                    content = @Content(mediaType = "text/plain",
+                    content = @Content(mediaType = "*/*",
                             examples = @ExampleObject(value = "Channel with id {channelId} not found"))
             ),
             @ApiResponse(
                     responseCode = "400",
                     description = "Private Channel은 수정할 수 없음",
-                    content = @Content(mediaType = "text/plain",
+                    content = @Content(mediaType = "*/*",
                             examples = @ExampleObject(value = "Private channel cannot be updated"))
             )
     })
     @PatchMapping(path = "/{channelId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Channel> update (
+            @Parameter(
+                    description = "수정할 Channel ID",
+                    schema = @Schema(type = "string", format = "uuid")
+            )
             @PathVariable ("channelId") UUID channelId,
             @Valid @RequestBody PublicChannelUpdateRequest request
             ) {
@@ -125,12 +131,16 @@ public class ChannelController {
             @ApiResponse(
                     responseCode = "404",
                     description = "Channel을 찾을 수 없음",
-                    content = @Content(mediaType = "text/plain",
+                    content = @Content(mediaType = "*/*",
                             examples = @ExampleObject(value = "Channel with id {channelId} not found"))
             )
     })
     @DeleteMapping("/{channelId}")
     public ResponseEntity<Void> delete (
+            @Parameter(
+                    description = "삭제할 Channel ID",
+                    schema = @Schema(type = "string", format = "uuid")
+            )
             @PathVariable ("channelId") UUID channelId
     ) {
         channelService.delete(channelId);
@@ -151,6 +161,10 @@ public class ChannelController {
     })
     @GetMapping
     public ResponseEntity<List<ChannelDto>> findAll (
+            @Parameter(
+                    description = "조회할 User ID",
+                    schema = @Schema(type = "string", format = "uuid")
+            )
             @RequestParam("userId") UUID userId
     ) {
         List<ChannelDto> channels = channelService.findAllByUserId(userId);

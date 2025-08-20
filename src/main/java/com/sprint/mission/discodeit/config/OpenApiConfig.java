@@ -1,43 +1,36 @@
 package com.sprint.mission.discodeit.config;
 
+//import io.swagger.v3.oas.annotations.info.Info;
+//import io.swagger.v3.oas.annotations.servers.Server;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.servers.Server;
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.List;
 
 @Configuration
 public class OpenApiConfig {
 
     @Bean
-    public OpenAPI openAPI() {
+    public OpenAPI discodeitOpenAPI() {
         return new OpenAPI()
-                .info(new io.swagger.v3.oas.models.info.Info()
+                .info(new Info()
                         .title("Discodeit API 문서")
-                        .version("v1.0.0")
-                        .description("Discodeit 프로젝트의 Swagger API 문서입니다."))
-                .servers(java.util.List.of(
-                        new io.swagger.v3.oas.models.servers.Server()
-                                .url("http://localhost:8080")
-                                .description("로컬 서버")
-                ));
+                        .description("Discodeit 프로젝트의 Swagger API 문서입니다.")
+                        .version("v1.0.0"))
+                .servers(List.of(new Server().url("http://localhost:8080").description("로컬 서버")));
     }
-
 
     @Bean
     public GroupedOpenApi v1Api() {
         return GroupedOpenApi.builder()
-                .group("v1")
-                .pathsToMatch("/api/v1/**")
+                .group("v1")                                  // => /api-docs/v1
+                .pathsToMatch("/api/**")                      // 스캔할 엔드포인트
+//                .packagesToScan("com.sprint.mission.discodeit.controller") // 스캔할 패키지
                 .build();
     }
-
-    @Bean
-    public GroupedOpenApi v2Api() {
-        return GroupedOpenApi.builder()
-                .group("v2")
-                .pathsToMatch("/api/v2/**")
-                .build();
-    }
-
 
 }

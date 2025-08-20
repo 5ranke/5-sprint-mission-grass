@@ -3,6 +3,7 @@ package com.sprint.mission.discodeit.controller;
 import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.service.BinaryContentService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -46,6 +47,10 @@ public class BinaryContentController {
     })
     @GetMapping("/{binaryContentId}")
     public ResponseEntity<BinaryContent> find (
+            @Parameter(
+                    description = "조회할 첨부 파일 ID",
+                    schema = @Schema(type = "string", format = "uuid")
+            )
             @PathVariable("binaryContentId") UUID binaryContentId
     ) {
         BinaryContent binaryContent = binaryContentService.find(binaryContentId);
@@ -66,9 +71,16 @@ public class BinaryContentController {
     })
     @GetMapping
     public ResponseEntity<List<BinaryContent>> findAllByIdIn (
+            @Parameter(
+                    description = "조회할 첨부 파일 ID 목록",
+                    array = @ArraySchema(schema = @Schema(type = "string", format = "uuid"))
+            )
             @RequestParam("binaryContentIds") List<UUID> binaryContentIds
     ) {
         List<BinaryContent> binaryContents = binaryContentService.findAllByIdIn(binaryContentIds);
         return ResponseEntity.status(HttpStatus.OK).body(binaryContents);
     }
+
+    // 배열 파라미터는 키를 반복적으로 보내는 것이 표준!
+    // /api/binaryContents?binaryContentIds=f119a90a-c33f-48ce-81e3-5852a7f8dac5&binaryContentIds=c69e7d10-86a8-4b4e-adcb-1eb738e5a4c2
 }

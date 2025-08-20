@@ -77,7 +77,7 @@ public class ReadStatusController {
                     responseCode = "404",
                     description = "Channel 또는 User를 찾을 수 없음",
                     content = @Content(
-                            mediaType = "text/plain",
+                            mediaType = "*/*",
                             examples = @ExampleObject(value = "Channel | User with id {channelId | userId} not found")
                     )
             ),
@@ -85,7 +85,7 @@ public class ReadStatusController {
                     responseCode = "400",
                     description = "이미 읽음 상태가 존재함",
                     content = @Content(
-                            mediaType = "text/plain",
+                            mediaType = "*/*",
                             examples = @ExampleObject(value = "ReadStatus with userId {userId} and channelId {channelId} already exists")
                     )
             )
@@ -109,17 +109,22 @@ public class ReadStatusController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Message 읽음 상태가 성공적으로 수정됨",
-                    content = @Content(schema = @Schema(implementation = ReadStatus.class))
+                    content = @Content(mediaType = "*/*",
+                            schema = @Schema(implementation = ReadStatus.class))
             ),
             @ApiResponse(
                     responseCode = "404",
                     description = "Message 읽음 상태를 찾을 수 없음",
-                    content = @Content(mediaType = "text/plain",
+                    content = @Content(mediaType = "*/*",
                             examples = @ExampleObject(value = "ReadStatus with id {readStatusId} not found"))
             )
     })
     @PatchMapping("/{readStatusId}")
     public ResponseEntity<ReadStatus> update (
+            @Parameter(
+                    description = "수정할 읽음 상태 ID",
+                    schema = @Schema(type = "string", format = "uuid")
+            )
             @PathVariable("readStatusId") UUID readStatusId,
             @Valid @RequestBody ReadStatusUpdateRequest request
             ) {

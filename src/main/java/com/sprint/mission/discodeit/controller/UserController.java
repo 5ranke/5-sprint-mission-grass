@@ -80,7 +80,7 @@ public class UserController {
                     responseCode = "400",
                     description = "같은 email 또는 username를 사용하는 User가 이미 존재함",
                     content = @Content(
-                            mediaType = "text/plain",
+                            mediaType = "*/*",
                             examples = @ExampleObject(value = "User with email {email} already exists")
                     )
             )
@@ -130,8 +130,14 @@ public class UserController {
     })
     @PatchMapping(path = "/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<User> update(
+            @Parameter(
+                    description = "수정할 User ID",
+                    schema = @Schema(type = "string", format = "uuid")
+            )
             @PathVariable("userId") UUID userId,
+
             @RequestPart("userUpdateRequest")UserUpdateRequest userUpdateRequest,
+            @Schema(description = "수정할 User 프로필 이미지", type = "string", format = "binary")
             @RequestPart(value = "profile", required = false) MultipartFile profile
             ){
         Optional<BinaryContentCreateRequest> profileRequest = Optional.ofNullable(profile)
@@ -147,7 +153,10 @@ public class UserController {
             operationId = "delete"
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "User가 성공적으로 삭제됨"),
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "User가 성공적으로 삭제됨"
+            ),
             @ApiResponse(
                     responseCode = "404",
                     description = "User를 찾을 수 없음",
@@ -159,6 +168,10 @@ public class UserController {
     })
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> delete(
+            @Parameter(
+                    description = "삭제할 User ID",
+                    schema = @Schema(type = "string", format = "uuid")
+            )
             @PathVariable("userId") UUID userId
     ) {
         userService.delete(userId);
@@ -179,12 +192,16 @@ public class UserController {
             @ApiResponse(
                     responseCode = "404",
                     description = "해당 User의 UserStatus를 찾을 수 없음",
-                    content = @Content(mediaType = "text/plain",
+                    content = @Content(mediaType = "*/*",
                             examples = @ExampleObject(value = "UserStatus with userId {userId} not found"))
             )
     })
     @PatchMapping(value = "/{userId}/userStatus", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserStatus> updateUserStatusByUserId(
+            @Parameter(
+                    description = "상태를 변경할 User ID",
+                    schema = @Schema(type = "string", format = "uuid")
+            )
             @PathVariable ("userId") UUID userId,
             @Valid @RequestBody UserStatusUpdateRequest request
             ) {
