@@ -26,16 +26,15 @@ import java.util.UUID;
 // 따라서 실제 비즈니스 로직은 UserService에 의존한다.
 
 @RequiredArgsConstructor // Lombok으로 스프링에서 DI(의존성 주입)의 방법 중에 생성자 주입을 임의의 코드없이 자동으로 설정해주는 어노테이션
-@Controller
-@ResponseBody // 리턴값을 뷰로 해석하지 않고, HTTP 응답 Body에 그대로 넣어주는 것
-@RequestMapping("/api/user") // 들어온 요청을 특정 메서드와 매핑
+@RestController
+@RequestMapping("/api/users") // 들어온 요청을 특정 메서드와 매핑
 public class UserController {
     private final UserService userService;
     private final UserStatusService userStatusService;
 
     // @RequestMapping : consumes 속성은 요청헤더 Content-type의 값을 제한하겠다는 의미
     // MULTIPART_FORM_DATA_VALUE : 웹에서 파일 업로드할 때 주로 쓰이는 요청 형식. 폼 데이터(예: username=홍길동)뿐만 아니라 파일까지 함께 전송
-    @RequestMapping(value = "/create", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<User> create(
             // @RequestPart : multipart 요청에서 파일이나 JSON 같은 파트를 꺼낼 때 사용
             @RequestPart("userCreateRequest") UserCreateRequest userCreateRequest, //Json
@@ -48,7 +47,7 @@ public class UserController {
     }
 
     private Optional<BinaryContentCreateRequest> resolveProfileRequest(MultipartFile profileFile) {
-        if(profileFile.isEmpty()) {
+        if(profileFile == null || profileFile.isEmpty()) {
             return Optional.empty();
         } else {
             try {
@@ -64,9 +63,9 @@ public class UserController {
         }
     }
 
-    @RequestMapping("/update")
+    @PatchMapping(path = "/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<User> update(
-            @RequestParam("userId") UUID userId,
+            @PathVariable("userId") UUID userId,
             @RequestPart("userUpdateRequest")UserUpdateRequest userUpdateRequest,
             @RequestPart(value = "profile", required = false) MultipartFile profile
             ){
@@ -76,23 +75,23 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
     }
 
-    @RequestMapping("/delete")
+    @DeleteMapping("/{userId}")
     public ResponseEntity<Void> delete(
-            @RequestParam("userId") UUID userId
+            @PathVariable("userId") UUID userId
     ) {
         userService.delete(userId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     } // 응답 데이터에 아무런 정보가 없을 때에는 No Content를 의미하는 204 상태코드를 사용합니다.
 
-    @RequestMapping("/findAll")
+    @GetMapping
     public ResponseEntity<List<UserDto>> findAll() {
         List<UserDto> users = userService.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(users);
     }
 
-    @RequestMapping("/updateUserStatusByUserId")
+    @PatchMapping(value = "/{userId}/userStatus", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserStatus> updateUserStatusByUserId(
-            @RequestParam ("userId") UUID userId,
+            @PathVariable ("userId") UUID userId,
             @RequestBody UserStatusUpdateRequest request // Body의 데이터 추출
             ) {
         UserStatus updatedUserStatus  = userStatusService.updateByUserId(userId, request);
