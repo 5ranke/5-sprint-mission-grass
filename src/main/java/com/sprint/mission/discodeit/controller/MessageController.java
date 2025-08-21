@@ -97,7 +97,6 @@ public class MessageController {
             @Parameter(
                     name = "attachments",
                     description = "Message 첨부 파일들",
-//                    required = false,
                     content = @Content(
                             array = @ArraySchema(schema = @Schema(type = "string", format = "binary"))
                     )
@@ -133,14 +132,18 @@ public class MessageController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Message가 성공적으로 수정됨",
-                    content = @Content(mediaType = "*/*",
-                            schema = @Schema(implementation = Message.class))
+                    content = @Content(
+                            mediaType = "*/*",
+                            schema = @Schema(implementation = Message.class)
+                    )
             ),
             @ApiResponse(
                     responseCode = "404",
                     description = "Message를 찾을 수 없음",
-                    content = @Content(mediaType = "*/*",
-                            examples = @ExampleObject(value = "Message with id {messageId} not found"))
+                    content = @Content(
+                            mediaType = "*/*",
+                            examples = @ExampleObject(value = "Message with id {messageId} not found")
+                    )
             )
     })
     @PatchMapping(path = "/{messageId}", consumes = {MediaType.APPLICATION_JSON_VALUE})
@@ -169,8 +172,10 @@ public class MessageController {
             @ApiResponse(
                     responseCode = "404",
                     description = "Message를 찾을 수 없음",
-                    content = @Content(mediaType = "*/*",
-                            examples = @ExampleObject(value = "Message with id {messageId} not found"))
+                    content = @Content(
+                            mediaType = "*/*",
+                            examples = @ExampleObject(value = "Message with id {messageId} not found")
+                    )
             )
     })
     @DeleteMapping("/{messageId}")

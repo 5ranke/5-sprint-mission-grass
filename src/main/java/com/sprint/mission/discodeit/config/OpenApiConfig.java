@@ -1,7 +1,5 @@
 package com.sprint.mission.discodeit.config;
 
-//import io.swagger.v3.oas.annotations.info.Info;
-//import io.swagger.v3.oas.annotations.servers.Server;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.servers.Server;
@@ -29,7 +27,6 @@ public class OpenApiConfig {
         return GroupedOpenApi.builder()
                 .group("v1")                                  // => /api-docs/v1
                 .pathsToMatch("/api/**")                      // 스캔할 엔드포인트
-//                .packagesToScan("com.sprint.mission.discodeit.controller") // 스캔할 패키지
                 .build();
     }
 

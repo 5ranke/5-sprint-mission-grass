@@ -64,7 +64,6 @@ public class GlobalExceptionHandler {
     // 400 Bad Request: @Valid 검증 실패
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> handleValidation(MethodArgumentNotValidException e) {
-        // 스펙은 단순 문자열 예시이므로, 가장 첫 필드 에러만 간략히 노출
         String msg = e.getBindingResult().getFieldErrors().stream()
                 .findFirst()
                 .map(err -> "Validation failed: " + err.getField() + " " + err.getDefaultMessage())

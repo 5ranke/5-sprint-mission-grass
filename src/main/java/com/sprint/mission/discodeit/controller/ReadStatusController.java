@@ -109,14 +109,18 @@ public class ReadStatusController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Message 읽음 상태가 성공적으로 수정됨",
-                    content = @Content(mediaType = "*/*",
-                            schema = @Schema(implementation = ReadStatus.class))
+                    content = @Content(
+                            mediaType = "*/*",
+                            schema = @Schema(implementation = ReadStatus.class)
+                    )
             ),
             @ApiResponse(
                     responseCode = "404",
                     description = "Message 읽음 상태를 찾을 수 없음",
-                    content = @Content(mediaType = "*/*",
-                            examples = @ExampleObject(value = "ReadStatus with id {readStatusId} not found"))
+                    content = @Content(
+                            mediaType = "*/*",
+                            examples = @ExampleObject(value = "ReadStatus with id {readStatusId} not found")
+                    )
             )
     })
     @PatchMapping("/{readStatusId}")
