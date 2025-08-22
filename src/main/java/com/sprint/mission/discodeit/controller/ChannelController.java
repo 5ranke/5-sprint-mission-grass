@@ -18,7 +18,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,11 +32,7 @@ public class ChannelController {
 
     private final ChannelService channelService;
 
-    @Operation(
-            summary = "Public Channel 생성",
-            description = "PublicChannelCreateRequest(JSON)를 받아 Public 채널을 생성합니다.",
-            operationId = "create_3"
-    )
+    @Operation(summary = "Public Channel 생성")
     @ApiResponses({
             @ApiResponse(
                     responseCode = "201",
@@ -48,20 +43,18 @@ public class ChannelController {
                     )
             )
     })
-    @PostMapping(path = "/public",consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping("/public")
     public ResponseEntity<Channel> create (
-            @Valid @RequestBody PublicChannelCreateRequest request
+            @Parameter(description = "Public Channel 생성 정보")
+            @Valid @RequestBody
+            PublicChannelCreateRequest request
             ) {
         Channel createdChannel = channelService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdChannel);
     }
 
 
-    @Operation(
-            summary = "Private Channel 생성",
-            description = "PrivateChannelCreateRequest(JSON)를 받아 Private 채널을 생성합니다.",
-            operationId = "create_4"
-    )
+    @Operation(summary = "Private Channel 생성")
     @ApiResponses({
             @ApiResponse(
                     responseCode = "201",
@@ -72,19 +65,18 @@ public class ChannelController {
                     )
             )
     })
-    @PostMapping(path = "/private", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping( "/private")
     public ResponseEntity<Channel> create (
-            @Valid @RequestBody PrivateChannelCreateRequest request
+            @Parameter(description = "Private Channel 생성 정보")
+            @Valid @RequestBody
+            PrivateChannelCreateRequest request
             ) {
         Channel createdChannel = channelService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdChannel);
     }
 
 
-    @Operation(
-            summary = "Channel 정보 수정",
-            description = "Channel ID를 기반으로 Public Channel 정보를 수정합니다."
-    )
+    @Operation(summary = "Channel 정보 수정")
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
@@ -105,24 +97,21 @@ public class ChannelController {
                             examples = @ExampleObject(value = "Private channel cannot be updated"))
             )
     })
-    @PatchMapping(path = "/{channelId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PatchMapping("/{channelId}")
     public ResponseEntity<Channel> update (
-            @Parameter(
-                    description = "수정할 Channel ID",
-                    schema = @Schema(type = "string", format = "uuid")
-            )
-            @PathVariable ("channelId") UUID channelId,
-            @Valid @RequestBody PublicChannelUpdateRequest request
+            @Parameter(description = "수정할 Channel ID")
+            @PathVariable ("channelId")
+            UUID channelId,
+            @Parameter(description = "수정할 Channel 정보")
+            @Valid @RequestBody
+            PublicChannelUpdateRequest request
             ) {
         Channel udpatedChannel = channelService.update(channelId, request);
         return ResponseEntity.status(HttpStatus.OK).body(udpatedChannel);
     }
 
 
-    @Operation(
-            summary = "Channel 삭제",
-            description = "Channel ID를 기반으로 채널을 삭제합니다."
-    )
+    @Operation(summary = "Channel 삭제")
     @ApiResponses({
             @ApiResponse(
                     responseCode = "204",
@@ -137,21 +126,16 @@ public class ChannelController {
     })
     @DeleteMapping("/{channelId}")
     public ResponseEntity<Void> delete (
-            @Parameter(
-                    description = "삭제할 Channel ID",
-                    schema = @Schema(type = "string", format = "uuid")
-            )
-            @PathVariable ("channelId") UUID channelId
+            @Parameter(description = "삭제할 Channel ID")
+            @PathVariable ("channelId")
+            UUID channelId
     ) {
         channelService.delete(channelId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 
-    @Operation(
-            summary = "User가 참여 중인 Channel 목록 조회",
-            description = "특정 User ID를 기반으로 사용자가 참여 중인 Channel 목록을 조회합니다."
-    )
+    @Operation(summary = "User가 참여 중인 Channel 목록 조회")
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
@@ -161,11 +145,9 @@ public class ChannelController {
     })
     @GetMapping
     public ResponseEntity<List<ChannelDto>> findAll (
-            @Parameter(
-                    description = "조회할 User ID",
-                    schema = @Schema(type = "string", format = "uuid")
-            )
-            @RequestParam("userId") UUID userId
+            @Parameter(description = "조회할 User ID")
+            @RequestParam("userId")
+            UUID userId
     ) {
         List<ChannelDto> channels = channelService.findAllByUserId(userId);
         return ResponseEntity.status(HttpStatus.OK).body(channels);

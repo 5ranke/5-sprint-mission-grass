@@ -40,33 +40,8 @@ public class UserController {
     private final UserService userService;
     private final UserStatusService userStatusService;
 
-    @Operation(
-            summary = "전체 User 목록 조회",
-            description = "시스템에 등록된 모든 사용자(UserDto)의 목록을 반환합니다.",
-            operationId = "findAll"
-    )
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "User 목록 조회 성공",
-                    content = @Content(
-                            mediaType = "*/*",
-                            array = @ArraySchema(schema = @Schema(implementation = UserDto.class))
-                    )
-            )
-    })
-    @GetMapping
-    public ResponseEntity<List<UserDto>> findAll() {
-        List<UserDto> users = userService.findAll();
-        return ResponseEntity.status(HttpStatus.OK).body(users);
-    }
 
-
-    @Operation(
-            summary = "User 등록",
-            description = "multipart/form-data로 userCreateRequest(JSON)과 profile(선택, 이미지 파일)을 업로드합니다.",
-            operationId = "create"
-    )
+    @Operation(summary = "User 등록")
     @ApiResponses({
             @ApiResponse(
                     responseCode = "201",
@@ -87,12 +62,18 @@ public class UserController {
     })
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<User> create(
-            @RequestPart("userCreateRequest")
-            @Schema(implementation = UserCreateRequest.class)
+            @Valid @RequestPart("userCreateRequest")
+            @Parameter(
+                    description = "User 생성 정보",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)
+            )
             UserCreateRequest userCreateRequest,
 
             @RequestPart(value = "profile", required = false)
-            @Parameter(description = "User 프로필 이미지")
+            @Parameter(
+                    description = "User 프로필 이미지",
+                    content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE)
+            )
             @Schema(type = "string", format = "binary")
             MultipartFile profile
     ) {
@@ -103,11 +84,7 @@ public class UserController {
     }
 
 
-    @Operation(
-            summary = "User 정보 수정",
-            description = "multipart/form-data로 User 정보와 프로필 이미지를 수정합니다.",
-            operationId = "update"
-    )
+    @Operation(summary = "User 정보 수정")
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
@@ -136,15 +113,15 @@ public class UserController {
     })
     @PatchMapping(path = "/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<User> update(
-            @Parameter(
-                    description = "수정할 User ID",
-                    schema = @Schema(type = "string", format = "uuid")
-            )
-            @PathVariable("userId") UUID userId,
-
-            @RequestPart("userUpdateRequest")UserUpdateRequest userUpdateRequest,
-            @Schema(description = "수정할 User 프로필 이미지", type = "string", format = "binary")
-            @RequestPart(value = "profile", required = false) MultipartFile profile
+            @Parameter(description = "수정할 User ID")
+            @PathVariable("userId")
+            UUID userId,
+            @Parameter(description = "수정할 User 정보")
+            @RequestPart("userUpdateRequest")
+            UserUpdateRequest userUpdateRequest,
+            @Parameter(description = "수정할 User 프로필 이미지")
+            @RequestPart(value = "profile", required = false)
+            MultipartFile profile
             ){
         Optional<BinaryContentCreateRequest> profileRequest = Optional.ofNullable(profile)
                 .flatMap(this::resolveProfileRequest);
@@ -153,11 +130,7 @@ public class UserController {
     }
 
 
-    @Operation(
-            summary = "User 삭제",
-            description = "userId에 해당하는 사용자를 삭제합니다.",
-            operationId = "delete"
-    )
+    @Operation(summary = "User 삭제")
     @ApiResponses({
             @ApiResponse(
                     responseCode = "204",
@@ -174,21 +147,34 @@ public class UserController {
     })
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> delete(
-            @Parameter(
-                    description = "삭제할 User ID",
-                    schema = @Schema(type = "string", format = "uuid")
-            )
-            @PathVariable("userId") UUID userId
+            @Parameter(description = "삭제할 User ID")
+            @PathVariable("userId")
+            UUID userId
     ) {
         userService.delete(userId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 
-    @Operation(
-            summary = "User 온라인 상태 업데이트",
-            description = "특정 User의 온라인 상태(UserStatus)를 업데이트합니다."
-    )
+    @Operation(summary = "전체 User 목록 조회")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "User 목록 조회 성공",
+                    content = @Content(
+                            mediaType = "*/*",
+                            array = @ArraySchema(schema = @Schema(implementation = UserDto.class))
+                    )
+            )
+    })
+    @GetMapping
+    public ResponseEntity<List<UserDto>> findAll() {
+        List<UserDto> users = userService.findAll();
+        return ResponseEntity.status(HttpStatus.OK).body(users);
+    }
+
+
+    @Operation(summary = "User 온라인 상태 업데이트")
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
@@ -203,14 +189,14 @@ public class UserController {
                             examples = @ExampleObject(value = "UserStatus with userId {userId} not found"))
             )
     })
-    @PatchMapping(value = "/{userId}/userStatus", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PatchMapping(value = "/{userId}/userStatus")
     public ResponseEntity<UserStatus> updateUserStatusByUserId(
-            @Parameter(
-                    description = "상태를 변경할 User ID",
-                    schema = @Schema(type = "string", format = "uuid")
-            )
-            @PathVariable ("userId") UUID userId,
-            @Valid @RequestBody UserStatusUpdateRequest request
+            @Parameter(description = "상태를 변경할 User ID")
+            @PathVariable ("userId")
+            UUID userId,
+            @Parameter(description = "변경할 User 온라인 상태 정보")
+            @Valid @RequestBody
+            UserStatusUpdateRequest request
             ) {
         UserStatus updatedUserStatus  = userStatusService.updateByUserId(userId, request);
         return ResponseEntity.status(HttpStatus.OK).body(updatedUserStatus);

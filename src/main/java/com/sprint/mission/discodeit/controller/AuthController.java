@@ -27,10 +27,7 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @Operation(
-            summary = "로그인",
-            operationId = "login"
-    )
+    @Operation(summary = "로그인")
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
@@ -59,7 +56,8 @@ public class AuthController {
     })
     @PostMapping("/login")
     public ResponseEntity<User> login (
-            @Valid @RequestBody LoginRequest loginRequest
+            @Valid @RequestBody
+            LoginRequest loginRequest
             ) {
         User user = authService.login(loginRequest);
         return ResponseEntity.status(HttpStatus.OK).body(user);

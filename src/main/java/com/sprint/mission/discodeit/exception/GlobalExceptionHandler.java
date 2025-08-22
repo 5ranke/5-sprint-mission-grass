@@ -7,8 +7,8 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
@@ -16,9 +16,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.util.NoSuchElementException;
 
-// @ControllerAdvice를 활용해 전역으로 처리
-@ControllerAdvice
-//@ResponseBody // 각각의 응답도 화면이 아닌 데이터베이스이므로 클래스 레벨에 @ResponseBody 추가
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     private ResponseEntity<String> plain(HttpStatus status, String message) {

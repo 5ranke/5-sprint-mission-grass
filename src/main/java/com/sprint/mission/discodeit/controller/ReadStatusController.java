@@ -30,11 +30,7 @@ public class ReadStatusController {
 
     private final ReadStatusService readStatusService;
 
-    @Operation(
-            summary = "User의 Message 읽음 상태 목록 조회",
-            description = "쿼리 파라미터 userId(UUID)를 받아 해당 사용자의 읽음 상태 리스트를 반환합니다.",
-            operationId = "findAllByUserId"
-    )
+    @Operation(summary = "User의 Message 읽음 상태 목록 조회")
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
@@ -47,23 +43,16 @@ public class ReadStatusController {
     })
     @GetMapping
     public ResponseEntity<List<ReadStatus>> findAllByUserId (
-            @Parameter(
-                    name = "userId",
-                    description = "조회할 User ID",
-                    required = true,
-                    schema = @Schema(type = "string", format = "uuid")
-            )
-            @RequestParam("userId") UUID userId
+            @Parameter(description = "조회할 User ID")
+            @RequestParam("userId") 
+            UUID userId
     ) {
         List<ReadStatus> readStatuses = readStatusService.findAllByUserId(userId);
         return ResponseEntity.status(HttpStatus.OK).body(readStatuses);
     }
 
 
-    @Operation(
-            summary = "Message 읽음 상태 생성",
-            operationId = "create_1"
-    )
+    @Operation(summary = "Message 읽음 상태 생성")
     @ApiResponses({
             @ApiResponse(
                     responseCode = "201",
@@ -92,9 +81,9 @@ public class ReadStatusController {
     })
     @PostMapping
     public ResponseEntity<ReadStatus> create (
-            //@Valid는 @RequestBody(또는 @RequestPart)로 들어온 JSON을 DTO의 제약 조건(@NotNull, @Email, @Size …)
-            //기준으로 자동 검사하고, 틀리면 400 Bad Request로 막아줌.
-            @Valid @RequestBody ReadStatusCreateRequest request
+            @Parameter(description = "ReadStatus 생성 정보")
+            @Valid @RequestBody 
+            ReadStatusCreateRequest request
             ) {
         ReadStatus createdReadStatus = readStatusService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdReadStatus);
@@ -125,12 +114,12 @@ public class ReadStatusController {
     })
     @PatchMapping("/{readStatusId}")
     public ResponseEntity<ReadStatus> update (
-            @Parameter(
-                    description = "수정할 읽음 상태 ID",
-                    schema = @Schema(type = "string", format = "uuid")
-            )
-            @PathVariable("readStatusId") UUID readStatusId,
-            @Valid @RequestBody ReadStatusUpdateRequest request
+            @Parameter(description = "수정할 읽음 상태 ID")
+            @PathVariable("readStatusId") 
+            UUID readStatusId,
+            @Parameter(description = "수정할 읽음 상태 정보")
+            @Valid @RequestBody 
+            ReadStatusUpdateRequest request
             ) {
         ReadStatus updatedReadStatus = readStatusService.update(readStatusId, request);
         return ResponseEntity.status(HttpStatus.OK).body(updatedReadStatus);

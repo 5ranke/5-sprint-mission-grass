@@ -27,10 +27,7 @@ public class BinaryContentController {
 
     private final BinaryContentService binaryContentService;
 
-    @Operation(
-            summary = "첨부 파일 조회",
-            description = "BinaryContent ID로 첨부 파일을 조회합니다."
-    )
+    @Operation(summary = "첨부 파일 조회")
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
@@ -47,10 +44,7 @@ public class BinaryContentController {
     })
     @GetMapping("/{binaryContentId}")
     public ResponseEntity<BinaryContent> find (
-            @Parameter(
-                    description = "조회할 첨부 파일 ID",
-                    schema = @Schema(type = "string", format = "uuid")
-            )
+            @Parameter(description = "조회할 첨부 파일 ID")
             @PathVariable("binaryContentId") UUID binaryContentId
     ) {
         BinaryContent binaryContent = binaryContentService.find(binaryContentId);
@@ -58,10 +52,7 @@ public class BinaryContentController {
     }
 
 
-    @Operation(
-            summary = "여러 첨부 파일 조회",
-            description = "여러 BinaryContent ID 목록을 받아 첨부 파일들을 조회합니다."
-    )
+    @Operation(summary = "여러 첨부 파일 조회")
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
@@ -71,16 +62,11 @@ public class BinaryContentController {
     })
     @GetMapping
     public ResponseEntity<List<BinaryContent>> findAllByIdIn (
-            @Parameter(
-                    description = "조회할 첨부 파일 ID 목록",
-                    array = @ArraySchema(schema = @Schema(type = "string", format = "uuid"))
-            )
-            @RequestParam("binaryContentIds") List<UUID> binaryContentIds
+            @Parameter(description = "조회할 첨부 파일 ID 목록")
+            @RequestParam("binaryContentIds")
+            List<UUID> binaryContentIds
     ) {
         List<BinaryContent> binaryContents = binaryContentService.findAllByIdIn(binaryContentIds);
         return ResponseEntity.status(HttpStatus.OK).body(binaryContents);
     }
-
-    // 배열 파라미터는 키를 반복적으로 보내는 것이 표준!
-    // /api/binaryContents?binaryContentIds=f119a90a-c33f-48ce-81e3-5852a7f8dac5&binaryContentIds=c69e7d10-86a8-4b4e-adcb-1eb738e5a4c2
 }
