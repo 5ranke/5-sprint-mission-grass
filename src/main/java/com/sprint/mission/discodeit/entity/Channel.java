@@ -20,7 +20,7 @@ public class Channel implements Serializable {
     private Instant createdAt;
     @Schema(description = "수정 시각", format = "date-time")
     private Instant updatedAt;
-    //
+
     @Schema(description = "채널 타입(PUBLIC/PRIVATE)", allowableValues = {"PUBLIC", "PRIVATE"})
     private ChannelType type;
     @Schema(description = "채널명")
@@ -31,7 +31,7 @@ public class Channel implements Serializable {
     public Channel(ChannelType type, String name, String description) {
         this.id = UUID.randomUUID();
         this.createdAt = Instant.now();
-        //
+
         this.type = type;
         this.name = name;
         this.description = description;

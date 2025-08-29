@@ -21,10 +21,10 @@ public class Message implements Serializable {
     private Instant createdAt;
     @Schema(description = "수정 시각", format = "date-time")
     private Instant updatedAt;
-    //
+
     @Schema(description = "메시지 내용")
     private String content;
-    //
+
     @Schema(description = "Channel ID", format = "uuid")
     private UUID channelId;
     @Schema(description = "작성자 User ID", format = "uuid")
@@ -35,7 +35,7 @@ public class Message implements Serializable {
     public Message(String content, UUID channelId, UUID authorId, List<UUID> attachmentIds) {
         this.id = UUID.randomUUID();
         this.createdAt = Instant.now();
-        //
+
         this.content = content;
         this.channelId = channelId;
         this.authorId = authorId;

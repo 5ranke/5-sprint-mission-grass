@@ -20,7 +20,7 @@ public class ReadStatus implements Serializable {
     private Instant createdAt;
     @Schema(description = "수정 시각", format = "date-time")
     private Instant updatedAt;
-    //
+
     @Schema(description = "User ID", format = "uuid")
     private UUID userId;
     @Schema(description = "Channel ID", format = "uuid")
@@ -31,7 +31,7 @@ public class ReadStatus implements Serializable {
     public ReadStatus(UUID userId, UUID channelId, Instant lastReadAt) {
         this.id = UUID.randomUUID();
         this.createdAt = Instant.now();
-        //
+
         this.userId = userId;
         this.channelId = channelId;
         this.lastReadAt = lastReadAt;

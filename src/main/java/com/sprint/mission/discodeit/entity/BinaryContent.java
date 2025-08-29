@@ -18,7 +18,7 @@ public class BinaryContent implements Serializable {
     private UUID id;
     @Schema(description = "생성 시각", format = "date-time")
     private Instant createdAt;
-    //
+
     @Schema(description = "파일명")
     private String fileName;
     @Schema(description = "파일 크기(Byte)", format = "int64")
@@ -31,7 +31,7 @@ public class BinaryContent implements Serializable {
     public BinaryContent(String fileName, Long size, String contentType, byte[] bytes) {
         this.id = UUID.randomUUID();
         this.createdAt = Instant.now();
-        //
+
         this.fileName = fileName;
         this.size = size;
         this.contentType = contentType;

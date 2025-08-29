@@ -20,7 +20,7 @@ public class User implements Serializable {
     private Instant createdAt;
     @Schema(description = "수정 시각", format = "date-time")
     private Instant updatedAt;
-    //
+
     @Schema(description = "사용자명")
     private String username;
     @Schema(description = "이메일")
@@ -33,7 +33,7 @@ public class User implements Serializable {
     public User(String username, String email, String password, UUID profileId) {
         this.id = UUID.randomUUID();
         this.createdAt = Instant.now();
-        //
+
         this.username = username;
         this.email = email;
         this.password = password;

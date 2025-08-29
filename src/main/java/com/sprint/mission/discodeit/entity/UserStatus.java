@@ -21,7 +21,7 @@ public class UserStatus implements Serializable {
     private Instant createdAt;
     @Schema(description = "수정 시각", format = "date-time")
     private Instant updatedAt;
-    //
+
     @Schema(description = "User ID", format = "uuid")
     private UUID userId;
     @Schema(description = "마지막 활동 시각", format = "date-time")
@@ -32,7 +32,7 @@ public class UserStatus implements Serializable {
     public UserStatus(UUID userId, Instant lastActiveAt) {
         this.id = UUID.randomUUID();
         this.createdAt = Instant.now();
-        //
+
         this.userId = userId;
         this.lastActiveAt = lastActiveAt;
     }
