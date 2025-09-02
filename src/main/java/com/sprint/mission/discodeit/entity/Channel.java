@@ -35,11 +35,10 @@ public class Channel extends BaseUpdatableEntity {
     @Column(name = "description", length = 500)
     private String description;
 
-
     @OneToMany(
             mappedBy = "channel",
             fetch = FetchType.LAZY,
-            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            cascade = CascadeType.ALL,
             orphanRemoval = true
     )
     private List<Message> messageList = new ArrayList<>();
@@ -47,7 +46,7 @@ public class Channel extends BaseUpdatableEntity {
     @OneToMany(
             mappedBy = "channel",
             fetch = FetchType.LAZY,
-            cascade = CascadeType.REMOVE,
+            cascade = CascadeType.ALL,
             orphanRemoval = true
     )
     private List<ReadStatus> readStatusList = new ArrayList<>();

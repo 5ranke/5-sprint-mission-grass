@@ -7,7 +7,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import java.util.ArrayList;
+import java.util.Set;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 @Entity
@@ -38,7 +39,7 @@ public class Message extends BaseUpdatableEntity {
     )
     private User author;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(
             name = "message_attachments",
             joinColumns = @JoinColumn(
@@ -50,14 +51,14 @@ public class Message extends BaseUpdatableEntity {
                     foreignKey = @ForeignKey(name = "fk_ma_attachment")
             )
     )
-    private List<BinaryContent> attachments = new ArrayList<>();
+    private Set<BinaryContent> attachmentList = new LinkedHashSet<>();
 
     public void update(String newContent, List<BinaryContent> newAttachments) {
         if (newContent != null && !newContent.equals(this.content)) {
             this.content = newContent;
         }
-        if (newAttachments != null && !newAttachments.equals(this.attachments)) {
-            this.attachments.addAll(newAttachments);
+        if (newAttachments != null && !newAttachments.equals(this.attachmentList)) {
+            this.attachmentList.addAll(newAttachments);
         }
     }
 }

@@ -44,9 +44,7 @@ public class User extends BaseUpdatableEntity {
     )
     private BinaryContent profile;
 
-     @OneToOne(mappedBy = "user",
-            cascade = CascadeType.REMOVE, // 부모 삭제 시 자식 삭제 전이
-            orphanRemoval = true)  // 관계 끊기 -> 자식 삭제
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private UserStatus status;
 
     public User(String username, String email, String password, BinaryContent profile) {
