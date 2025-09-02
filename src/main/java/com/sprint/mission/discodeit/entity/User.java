@@ -1,66 +1,73 @@
 package com.sprint.mission.discodeit.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.sprint.mission.discodeit.entity.base.BaseUpdatableEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
-import java.io.Serial;
-import java.io.Serializable;
-import java.time.Instant;
-import java.util.UUID;
-
-@Getter
+@Entity
+@Table(
+        name = "users",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "uk_users_username", columnNames = "username"),
+                @UniqueConstraint(name = "uk_users_email", columnNames = "email")
+        }
+)
+@Getter @SuperBuilder
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Schema(name = "User")
-public class User implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
-
-    @Schema(description = "User ID", format = "uuid")
-    private UUID id;
-    @Schema(description = "생성 시각", format = "date-time")
-    private Instant createdAt;
-    @Schema(description = "수정 시각", format = "date-time")
-    private Instant updatedAt;
+public class User extends BaseUpdatableEntity {
 
     @Schema(description = "사용자명")
+    @Column(nullable = false, unique = true, length = 50)
     private String username;
+
     @Schema(description = "이메일")
+    @Column(nullable = false, unique = true, length = 100)
     private String email;
+
     @Schema(description = "비밀번호")
+    @Column(nullable = false, length = 60)
     private String password;
-    @Schema(description = "프로필 BinaryContent ID", format = "uuid")
-    private UUID profileId;
 
-    public User(String username, String email, String password, UUID profileId) {
-        this.id = UUID.randomUUID();
-        this.createdAt = Instant.now();
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "profile_id",
+            foreignKey = @ForeignKey(name = "fk_users_profile")
+    )
+    private BinaryContent profile;
 
+     @OneToOne(mappedBy = "user",
+            cascade = CascadeType.REMOVE, // 부모 삭제 시 자식 삭제 전이
+            orphanRemoval = true)  // 관계 끊기 -> 자식 삭제
+    private UserStatus status;
+
+    public User(String username, String email, String password, BinaryContent profile) {
         this.username = username;
         this.email = email;
         this.password = password;
-        this.profileId = profileId;
+        this.profile = profile;
     }
 
-    public void update(String newUsername, String newEmail, String newPassword, UUID newProfileId) {
-        boolean anyValueUpdated = false;
+    public void update(String newUsername, String newEmail, String newPassword, BinaryContent newProfile) {
         if (newUsername != null && !newUsername.equals(this.username)) {
             this.username = newUsername;
-            anyValueUpdated = true;
         }
         if (newEmail != null && !newEmail.equals(this.email)) {
             this.email = newEmail;
-            anyValueUpdated = true;
         }
         if (newPassword != null && !newPassword.equals(this.password)) {
             this.password = newPassword;
-            anyValueUpdated = true;
         }
-        if (newProfileId != null && !newProfileId.equals(this.profileId)) {
-            this.profileId = newProfileId;
-            anyValueUpdated = true;
-        }
-
-        if (anyValueUpdated) {
-            this.updatedAt = Instant.now();
+        if (newProfile != this.profile) {
+            this.profile = newProfile;
         }
     }
 }

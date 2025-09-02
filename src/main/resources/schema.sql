@@ -7,10 +7,11 @@ DROP TABLE IF EXISTS channels CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS binary_contents CASCADE;
 
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- ===== 테이블 생성 =====
 CREATE TABLE binary_contents (
-  id            uuid PRIMARY KEY,
+  id            uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
   created_at    timestamptz NOT NULL,
   file_name     varchar(255) NOT NULL,
   size          bigint NOT NULL,
@@ -19,7 +20,7 @@ CREATE TABLE binary_contents (
 );
 
 CREATE TABLE users (
-  id           uuid PRIMARY KEY,
+  id           uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
   created_at   timestamptz NOT NULL,
   updated_at   timestamptz,
   username     varchar(50)  NOT NULL,
@@ -34,7 +35,7 @@ CREATE TABLE users (
 );
 
 CREATE TABLE channels (
-  id           uuid PRIMARY KEY,
+  id           uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
   created_at   timestamptz NOT NULL,
   updated_at   timestamptz,
   name         varchar(100),
@@ -43,7 +44,7 @@ CREATE TABLE channels (
 );
 
 CREATE TABLE messages (
-  id           uuid PRIMARY KEY,
+  id           uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
   created_at   timestamptz NOT NULL,
   updated_at   timestamptz,
   content      text,
@@ -58,7 +59,7 @@ CREATE TABLE messages (
 );
 
 CREATE TABLE read_statuses (
-  id            uuid PRIMARY KEY,
+  id            uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
   created_at    timestamptz NOT NULL,
   updated_at    timestamptz,
   user_id       uuid,
@@ -74,7 +75,7 @@ CREATE TABLE read_statuses (
 );
 
 CREATE TABLE user_statuses (
-  id             uuid PRIMARY KEY,
+  id             uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
   created_at     timestamptz NOT NULL,
   updated_at     timestamptz,
   user_id        uuid NOT NULL,
@@ -97,8 +98,8 @@ CREATE TABLE message_attachments (
 );
 
 -- ===== 인덱스 =====
-CREATE INDEX IF NOT EXISTS idx_messages_channel_created  ON messages (channel_id, created_at DESC);
-CREATE INDEX IF NOT EXISTS idx_messages_author           ON messages (author_id);
-CREATE INDEX IF NOT EXISTS idx_read_statuses_user        ON read_statuses (user_id);
-CREATE INDEX IF NOT EXISTS idx_read_statuses_channel     ON read_statuses (channel_id);
-CREATE INDEX IF NOT EXISTS idx_users_profile             ON users (profile_id);
+-- CREATE INDEX IF NOT EXISTS idx_messages_channel_created  ON messages (channel_id, created_at DESC);
+-- CREATE INDEX IF NOT EXISTS idx_messages_author           ON messages (author_id);
+-- CREATE INDEX IF NOT EXISTS idx_read_statuses_user        ON read_statuses (user_id);
+-- CREATE INDEX IF NOT EXISTS idx_read_statuses_channel     ON read_statuses (channel_id);
+-- CREATE INDEX IF NOT EXISTS idx_users_profile             ON users (profile_id);
