@@ -15,6 +15,6 @@ public interface MessageMapper {
 //    UserDto author,
 //    List<BinaryContentDto> attachments
 
-    @Mapping(target = "channelId", source = "channel.id") // source는 뭔지? TODO
+    @Mapping(target = "channelId", source = "channel.id")
     MessageDto toDto(Message message);
 }

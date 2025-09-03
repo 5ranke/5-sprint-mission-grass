@@ -16,7 +16,6 @@ import java.time.Instant;
 @Table(
         name = "read_statuses",
         uniqueConstraints = @UniqueConstraint(
-                name = "uk_read_user_channel",
                 columnNames = {"user_id", "channel_id"}
         )
 )
@@ -30,14 +29,14 @@ public class ReadStatus extends BaseUpdatableEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "user_id",
-            foreignKey = @ForeignKey(name = "fk_read_user")
+            foreignKey = @ForeignKey(name = "fk_read_statuses_user")
     )
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "channel_id",
-            foreignKey = @ForeignKey(name = "fk_read_channel")
+            foreignKey = @ForeignKey(name = "fk_read_statuses_channel")
     )
     private Channel channel;
 

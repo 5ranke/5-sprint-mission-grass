@@ -44,11 +44,11 @@ public class Message extends BaseUpdatableEntity {
             name = "message_attachments",
             joinColumns = @JoinColumn(
                     name = "message_id",
-                    foreignKey = @ForeignKey(name = "fk_ma_message")
+                    foreignKey = @ForeignKey(name = "fk_message_attachments_message")
             ),
             inverseJoinColumns = @JoinColumn(
                     name = "attachment_id",
-                    foreignKey = @ForeignKey(name = "fk_ma_attachment")
+                    foreignKey = @ForeignKey(name = "fk_message_attachments_attachment")
             )
     )
     private Set<BinaryContent> attachmentList = new LinkedHashSet<>();

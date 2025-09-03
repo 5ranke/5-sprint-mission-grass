@@ -11,13 +11,7 @@ import java.time.Duration;
 import java.time.Instant;
 
 @Entity
-@Table(
-        name = "user_statuses",
-        uniqueConstraints = @UniqueConstraint(
-                name = "uk_status_user",
-                columnNames = "user_id"
-        )
-)
+@Table(name = "user_statuses")
 @Getter @SuperBuilder
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -30,7 +24,7 @@ public class UserStatus extends BaseUpdatableEntity {
             name = "user_id",
             nullable = false,
             unique = true,
-            foreignKey = @ForeignKey(name = "fk_status_user")
+            foreignKey = @ForeignKey(name = "fk_user_statuses_user")
     )
     private User user;
 

@@ -11,13 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(
-        name = "users",
-        uniqueConstraints = {
-                @UniqueConstraint(name = "uk_users_username", columnNames = "username"),
-                @UniqueConstraint(name = "uk_users_email", columnNames = "email")
-        }
-)
+@Table(name = "users")
 @Getter @SuperBuilder
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
