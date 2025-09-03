@@ -17,7 +17,6 @@ import java.util.List;
 @Table(name = "channels")
 @Getter @SuperBuilder
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Schema(name = "Channel")
 public class Channel extends BaseUpdatableEntity {

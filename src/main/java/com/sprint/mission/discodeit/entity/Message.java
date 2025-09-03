@@ -15,7 +15,6 @@ import java.util.List;
 @Table(name = "messages")
 @Getter @SuperBuilder
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Schema(name = "Message")
 public class Message extends BaseUpdatableEntity {

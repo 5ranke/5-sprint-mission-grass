@@ -14,7 +14,6 @@ import lombok.experimental.SuperBuilder;
 @Table(name = "users")
 @Getter @SuperBuilder
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Schema(name = "User")
 public class User extends BaseUpdatableEntity {

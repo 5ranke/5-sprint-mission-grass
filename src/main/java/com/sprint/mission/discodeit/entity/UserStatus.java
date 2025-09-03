@@ -14,7 +14,6 @@ import java.time.Instant;
 @Table(name = "user_statuses")
 @Getter @SuperBuilder
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Schema(name = "UserStatus")
 public class UserStatus extends BaseUpdatableEntity {

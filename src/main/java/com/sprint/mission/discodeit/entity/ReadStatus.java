@@ -21,7 +21,6 @@ import java.time.Instant;
 )
 @Getter @SuperBuilder
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Schema(name = "ReadStatus")
 public class ReadStatus extends BaseUpdatableEntity {

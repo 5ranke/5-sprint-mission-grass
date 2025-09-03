@@ -14,7 +14,6 @@ import lombok.experimental.SuperBuilder;
 @Table(name = "binary_contents")
 @Getter @SuperBuilder
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Schema(name = "BinaryContent")
 public class BinaryContent extends BaseEntity {
@@ -31,8 +30,9 @@ public class BinaryContent extends BaseEntity {
     @Column(name = "content_type", nullable = false, length = 100)
     private String contentType;
 
-    @Schema(description = "파일 바이트", type = "string", format = "byte")
-    @Column(name = "bytes", nullable = false, columnDefinition = "bytea")
-    private byte[] bytes;
-
+    public BinaryContent(String fileName, Long size, String contentType) {
+        this.fileName = fileName;
+        this.size = size;
+        this.contentType = contentType;
+    }
 }
