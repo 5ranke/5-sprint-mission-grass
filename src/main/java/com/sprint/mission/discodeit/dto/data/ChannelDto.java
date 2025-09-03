@@ -18,7 +18,7 @@ public record ChannelDto(
         @Schema(description = "채널 설명")
         String description,
         @Schema(description = "참여자 User ID 목록")
-        List<UserDto> participantIds,
+        List<UserDto> participants,
         @Schema(description = "마지막 메시지 시각", format = "date-time")
         Instant lastMessageAt
 ) {

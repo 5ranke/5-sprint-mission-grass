@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.time.Duration;
 import java.time.Instant;
 
 @Entity
@@ -41,5 +42,10 @@ public class UserStatus extends BaseUpdatableEntity {
         if (lastActiveAt != null && !lastActiveAt.equals(this.lastActiveAt)) {
             this.lastActiveAt = lastActiveAt;
         }
+    }
+
+    public Boolean isOnline() {
+        Instant instantFiveMinutesAgo = Instant.now().minus(Duration.ofMinutes(5));
+        return lastActiveAt.isAfter(instantFiveMinutesAgo);
     }
 }
