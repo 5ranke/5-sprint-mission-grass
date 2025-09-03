@@ -9,8 +9,7 @@ public interface BinaryContentMapper {
 //    UUID id,
 //    String fileName,
 //    Long size,
-//    String contentType,
-//    byte[] bytes
+//    String contentType
 
     BinaryContentDto toDto(BinaryContent binaryContent);
 }
