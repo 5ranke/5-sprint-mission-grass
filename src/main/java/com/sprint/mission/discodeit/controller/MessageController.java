@@ -1,6 +1,7 @@
 package com.sprint.mission.discodeit.controller;
 
 import com.sprint.mission.discodeit.controller.api.MessageApi;
+import com.sprint.mission.discodeit.dto.data.MessageDto;
 import com.sprint.mission.discodeit.dto.request.BinaryContentCreateRequest;
 import com.sprint.mission.discodeit.dto.request.MessageCreateRequest;
 import com.sprint.mission.discodeit.dto.request.MessageUpdateRequest;
@@ -27,7 +28,7 @@ public class MessageController implements MessageApi {
 
     @Override
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<Message> create (
+    public ResponseEntity<MessageDto> create (
             @RequestPart("messageCreateRequest") MessageCreateRequest messageCreateRequest,
             @RequestPart(value = "attachments", required = false) List<MultipartFile> attachments) {
         List<BinaryContentCreateRequest> attachmentRequests = Optional.ofNullable(attachments)
@@ -45,17 +46,17 @@ public class MessageController implements MessageApi {
                         })
                         .toList())
                 .orElse(new ArrayList<>());
-        Message createdMessage = messageService.create(messageCreateRequest, attachmentRequests);
+        MessageDto createdMessage = messageService.create(messageCreateRequest, attachmentRequests);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdMessage);
     }
 
 
     @Override
     @PatchMapping( "/{messageId}")
-    public ResponseEntity<Message> update (
+    public ResponseEntity<MessageDto> update (
             @PathVariable("messageId") UUID messageId,
             @RequestBody MessageUpdateRequest messageUpdateRequest) {
-        Message updatedMessage = messageService.update(messageId, messageUpdateRequest);
+        MessageDto updatedMessage = messageService.update(messageId, messageUpdateRequest);
         return ResponseEntity.status(HttpStatus.OK).body(updatedMessage);
     }
 
@@ -70,8 +71,8 @@ public class MessageController implements MessageApi {
 
     @Override
     @GetMapping
-    public ResponseEntity<List<Message>> findAllByChannelId (@RequestParam("channelId") UUID channelId) {
-        List<Message> messages = messageService.findAllByChannelId(channelId);
+    public ResponseEntity<List<MessageDto>> findAllByChannelId (@RequestParam("channelId") UUID channelId) {
+        List<MessageDto> messages = messageService.findAllByChannelId(channelId);
         return ResponseEntity.status(HttpStatus.OK).body(messages);
     }
 
