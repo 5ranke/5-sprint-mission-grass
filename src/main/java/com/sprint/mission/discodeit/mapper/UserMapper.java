@@ -13,6 +13,6 @@ public interface UserMapper {
 //    BinaryContentDto profile,
 //    Boolean online
 
-    @Mapping(target = "online", expression ="java(user.getStatus.isOnline())" )
+    @Mapping(target = "online", expression ="java(user.getStatus().isOnline())")
     UserDto toDto(User user);
 }

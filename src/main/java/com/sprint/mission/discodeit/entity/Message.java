@@ -63,12 +63,4 @@ public class Message extends BaseUpdatableEntity {
             this.content = newContent;
         }
     }
-//    public void update(String newContent, List<BinaryContent> newAttachments) {
-//        if (newContent != null && !newContent.equals(this.content)) {
-//            this.content = newContent;
-//        }
-//        if (newAttachments != null && !newAttachments.equals(this.attachmentList)) {
-//            this.attachmentList.addAll(newAttachments);
-//        }
-//    }
 }

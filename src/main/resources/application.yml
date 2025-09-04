@@ -23,13 +23,13 @@ spring:
         physical_naming_strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
         # Naming 전략 추가 DB 스네이크 - Java 카멜
         jdbc.time_zone: UTC # JDBC 레벨에서 UTC로 통일
-#
-#discodeit:
-#  repository:
-#    type: file   # jcf | file
-#    file-directory: .discodeit
 
-# src/main/resources/application.yml
+discodeit:
+  storage:
+    type: local
+    local:
+      root-path: /var/uploads/discodeit
+
 server:
   port: 8080
 
