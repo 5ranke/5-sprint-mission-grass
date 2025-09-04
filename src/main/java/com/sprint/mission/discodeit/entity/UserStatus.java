@@ -31,6 +31,11 @@ public class UserStatus extends BaseUpdatableEntity {
     @Column(name = "last_active_at", nullable = false)
     private Instant lastActiveAt;
 
+    public UserStatus(User user, Instant lastActiveAt) {
+        this.user = user;
+        this.lastActiveAt = lastActiveAt;
+    }
+
     public void update(Instant lastActiveAt) {
         if (lastActiveAt != null && !lastActiveAt.equals(this.lastActiveAt)) {
             this.lastActiveAt = lastActiveAt;

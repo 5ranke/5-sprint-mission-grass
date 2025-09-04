@@ -5,7 +5,6 @@ import com.sprint.mission.discodeit.entity.base.BaseUpdatableEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -49,6 +48,12 @@ public class Channel extends BaseUpdatableEntity {
             orphanRemoval = true
     )
     private List<ReadStatus> readStatusList = new ArrayList<>();
+
+    public Channel(ChannelType type, String name, String description) {
+        this.type = type;
+        this.name = name;
+        this.description = description;
+    }
 
     public void update(String newName, String newDescription) {
         if (newName != null && !newName.equals(this.name)) {

@@ -9,7 +9,6 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.Set;
 import java.util.LinkedHashSet;
-import java.util.List;
 
 @Entity
 @Table(name = "messages")
@@ -50,14 +49,26 @@ public class Message extends BaseUpdatableEntity {
                     foreignKey = @ForeignKey(name = "fk_message_attachments_attachment")
             )
     )
-    private Set<BinaryContent> attachmentList = new LinkedHashSet<>();
+    private Set<BinaryContent> attachments = new LinkedHashSet<>();
 
-    public void update(String newContent, List<BinaryContent> newAttachments) {
+    public Message(String content, Channel channel, User author, Set<BinaryContent> attachmentList) {
+        this.content = content;
+        this.channel = channel;
+        this.author = author;
+        this.attachments = attachmentList;
+    }
+
+    public void update(String newContent) {
         if (newContent != null && !newContent.equals(this.content)) {
             this.content = newContent;
         }
-        if (newAttachments != null && !newAttachments.equals(this.attachmentList)) {
-            this.attachmentList.addAll(newAttachments);
-        }
     }
+//    public void update(String newContent, List<BinaryContent> newAttachments) {
+//        if (newContent != null && !newContent.equals(this.content)) {
+//            this.content = newContent;
+//        }
+//        if (newAttachments != null && !newAttachments.equals(this.attachmentList)) {
+//            this.attachmentList.addAll(newAttachments);
+//        }
+//    }
 }

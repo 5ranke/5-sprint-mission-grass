@@ -5,7 +5,6 @@ import com.sprint.mission.discodeit.entity.base.BaseUpdatableEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -42,6 +41,12 @@ public class ReadStatus extends BaseUpdatableEntity {
     @Schema(description = "마지막 읽은 시각", format = "date-time")
     @Column(name = "last_read_at", nullable = false)
     private Instant lastReadAt;
+
+    public ReadStatus(User user, Channel channel, Instant lastReadAt) {
+        this.user = user;
+        this.channel = channel;
+        this.lastReadAt = lastReadAt;
+    }
 
     public void update(Instant newLastReadAt) {
         if (newLastReadAt != null && !newLastReadAt.equals(this.lastReadAt)) {
