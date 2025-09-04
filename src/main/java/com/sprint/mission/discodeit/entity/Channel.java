@@ -21,15 +21,12 @@ import java.util.List;
 public class Channel extends BaseUpdatableEntity {
 
     @Enumerated(EnumType.STRING)
-    @Schema(description = "채널 타입(PUBLIC/PRIVATE)", allowableValues = {"PUBLIC", "PRIVATE"})
     @Column(name = "type", nullable = false, length = 10)
     private ChannelType type;
 
-    @Schema(description = "채널명")
     @Column(name = "name", length = 100)
     private String name;
 
-    @Schema(description = "채널 설명")
     @Column(name = "description", length = 500)
     private String description;
 

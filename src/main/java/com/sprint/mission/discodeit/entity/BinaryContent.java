@@ -17,15 +17,12 @@ import lombok.experimental.SuperBuilder;
 @Schema(name = "BinaryContent")
 public class BinaryContent extends BaseEntity {
 
-    @Schema(description = "파일명")
     @Column(name = "file_name", nullable = false, length = 255)
     private String fileName;
 
-    @Schema(description = "파일 크기(Byte)", format = "int64")
     @Column(name = "size", nullable = false)
     private Long size;
 
-    @Schema(description = "콘텐츠 타입")
     @Column(name = "content_type", nullable = false, length = 100)
     private String contentType;
 

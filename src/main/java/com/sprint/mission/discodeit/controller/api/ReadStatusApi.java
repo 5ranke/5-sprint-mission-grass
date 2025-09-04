@@ -4,7 +4,6 @@ package com.sprint.mission.discodeit.controller.api;
 import com.sprint.mission.discodeit.dto.data.ReadStatusDto;
 import com.sprint.mission.discodeit.dto.request.ReadStatusCreateRequest;
 import com.sprint.mission.discodeit.dto.request.ReadStatusUpdateRequest;
-import com.sprint.mission.discodeit.entity.ReadStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -26,7 +25,7 @@ public interface ReadStatusApi {
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200", description = "Message 읽음 상태 목록 조회 성공",
-                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = ReadStatus.class)))
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = ReadStatusDto.class)))
             )
     })
     ResponseEntity<List<ReadStatusDto>> findAllByUserId (
@@ -37,7 +36,7 @@ public interface ReadStatusApi {
     @ApiResponses({
             @ApiResponse(
                     responseCode = "201", description = "Message 읽음 상태가 성공적으로 생성됨",
-                    content = @Content(schema = @Schema(implementation = ReadStatus.class))
+                    content = @Content(schema = @Schema(implementation = ReadStatusDto.class))
             ),
             @ApiResponse(
                     responseCode = "404", description = "Channel 또는 User를 찾을 수 없음",
@@ -56,7 +55,7 @@ public interface ReadStatusApi {
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200", description = "Message 읽음 상태가 성공적으로 수정됨",
-                    content = @Content(schema = @Schema(implementation = ReadStatus.class))
+                    content = @Content(schema = @Schema(implementation = ReadStatusDto.class))
             ),
             @ApiResponse(
                     responseCode = "404", description = "Message 읽음 상태를 찾을 수 없음",

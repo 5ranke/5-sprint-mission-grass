@@ -38,7 +38,6 @@ public class ReadStatus extends BaseUpdatableEntity {
     )
     private Channel channel;
 
-    @Schema(description = "마지막 읽은 시각", format = "date-time")
     @Column(name = "last_read_at", nullable = false)
     private Instant lastReadAt;
 

@@ -2,11 +2,12 @@ package com.sprint.mission.discodeit.controller;
 
 import com.sprint.mission.discodeit.controller.api.BinaryContentApi;
 import com.sprint.mission.discodeit.dto.data.BinaryContentDto;
-import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.service.BinaryContentService;
 import com.sprint.mission.discodeit.storage.BinaryContentStorage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,9 +36,11 @@ public class BinaryContentController implements BinaryContentApi {
         return ResponseEntity.status(HttpStatus.OK).body(binaryContents);
     }
 
-    @GetMapping("/{binaryContentId}/download")
-    public ResponseEntity<?> download(@PathVariable("binaryContentId") UUID binaryContentId) {
-        BinaryContentDto dto = binaryContentService.find(binaryContentId);
-        return binaryContentStorage.download(dto);
+    @Override
+    @GetMapping(value = "/{binaryContentId}/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<?> download(
+            @PathVariable("binaryContentId") UUID binaryContentId) {
+        BinaryContentDto binaryContentDto = binaryContentService.find(binaryContentId);
+        return binaryContentStorage.download(binaryContentDto);
     }
 }

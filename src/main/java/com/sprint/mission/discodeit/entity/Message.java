@@ -18,7 +18,6 @@ import java.util.LinkedHashSet;
 @Schema(name = "Message")
 public class Message extends BaseUpdatableEntity {
 
-    @Schema(description = "메시지 내용")
     @Column(name = "content", columnDefinition = "text")
     private String content;
 

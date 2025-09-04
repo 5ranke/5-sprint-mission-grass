@@ -17,15 +17,12 @@ import lombok.experimental.SuperBuilder;
 @Schema(name = "User")
 public class User extends BaseUpdatableEntity {
 
-    @Schema(description = "사용자명")
     @Column(nullable = false, unique = true, length = 50)
     private String username;
 
-    @Schema(description = "이메일")
     @Column(nullable = false, unique = true, length = 100)
     private String email;
 
-    @Schema(description = "비밀번호")
     @Column(nullable = false, length = 60)
     private String password;
 

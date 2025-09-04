@@ -27,7 +27,6 @@ public class UserStatus extends BaseUpdatableEntity {
     )
     private User user;
 
-    @Schema(description = "마지막 활동 시각", format = "date-time")
     @Column(name = "last_active_at", nullable = false)
     private Instant lastActiveAt;
 
