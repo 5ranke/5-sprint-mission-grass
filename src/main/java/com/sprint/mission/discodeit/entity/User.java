@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Entity
@@ -33,6 +34,7 @@ public class User extends BaseUpdatableEntity {
     )
     private BinaryContent profile;
 
+    @Setter
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private UserStatus status;
 
@@ -57,4 +59,5 @@ public class User extends BaseUpdatableEntity {
             this.profile = newProfile;
         }
     }
+
 }
