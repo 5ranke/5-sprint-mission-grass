@@ -1,9 +1,6 @@
 package com.sprint.mission.discodeit.entity.base;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.Id;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +18,7 @@ import java.util.UUID;
 @SuperBuilder
 public abstract class BaseEntity {
     @Id
+    @GeneratedValue
     @Column(columnDefinition = "uuid",
             updatable = false, nullable = false)
     private UUID id;

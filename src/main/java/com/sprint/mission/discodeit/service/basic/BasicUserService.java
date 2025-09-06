@@ -64,6 +64,8 @@ public class BasicUserService implements UserService {
 
         Instant now = Instant.now();
         UserStatus userStatus = new UserStatus(createdUser, now);
+
+        createdUser.setStatus(userStatus);
         userStatusRepository.save(userStatus);
 
         return userMapper.toDto(createdUser);

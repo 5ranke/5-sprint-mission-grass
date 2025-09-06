@@ -8,6 +8,7 @@ import com.sprint.mission.discodeit.repository.MessageRepository;
 import com.sprint.mission.discodeit.repository.ReadStatusRepository;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -21,9 +22,12 @@ public abstract class ChannelMapper {
 //    String description,
 //    List<UserDto> participants,
 //    Instant lastMessageAt
-    private MessageRepository messageRepository;
-    private ReadStatusRepository readStatusRepository;
-    private UserMapper userMapper;
+    @Autowired
+    protected MessageRepository messageRepository;
+    @Autowired
+    protected ReadStatusRepository readStatusRepository;
+    @Autowired
+    protected UserMapper userMapper;
 
     @Mapping(target = "participants", expression = "java(getParticipants(channel))")
     @Mapping(target = "lastMessageAt", expression = "java(getLastMessageAt(channel))")

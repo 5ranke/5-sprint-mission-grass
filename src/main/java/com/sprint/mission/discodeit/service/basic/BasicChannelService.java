@@ -48,7 +48,7 @@ public class BasicChannelService implements ChannelService {
                 .forEach(userId -> {
                     User user = userRepository.findById(userId)
                             .orElseThrow(() -> new NoSuchElementException("User with id " + userId + " not found"));
-                    ReadStatus readStatus = new ReadStatus(user, createdChannel, Instant.MIN);
+                    ReadStatus readStatus = new ReadStatus(user, createdChannel, Instant.now());
                     readStatusRepository.save(readStatus);
                 });
         return channelMapper.toDto(channel);
@@ -64,15 +64,14 @@ public class BasicChannelService implements ChannelService {
     @Override
     @Transactional(readOnly = true)
     public List<ChannelDto> findAllByUserId(UUID userId) {
-        List<Channel> mySubscribedChannels = readStatusRepository.findAllByUserId(userId).stream()
-                .map(ReadStatus::getChannel)
+        List<UUID> mySubscribedChannels = readStatusRepository.findAllByUserId(userId).stream()
+                .map(ReadStatus::getChannel).map(Channel::getId)
                 .toList();
 
-        return channelRepository.findAll().stream()
-                .filter(channel ->
-                        channel.getType().equals(ChannelType.PUBLIC)
-                                || mySubscribedChannels.contains(channel)
-                )
+        List<Channel> channels = channelRepository
+                .findPublicOrSubscribedWithMessagesAndStatuses(mySubscribedChannels);
+
+        return channels.stream()
                 .map(channelMapper::toDto)
                 .toList();
     }
