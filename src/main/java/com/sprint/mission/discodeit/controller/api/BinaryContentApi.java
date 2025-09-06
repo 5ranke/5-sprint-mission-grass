@@ -10,9 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.UUID;
@@ -53,7 +51,6 @@ public interface BinaryContentApi {
                     responseCode = "200",
                     description = "파일 다운로드 성공",
                     content = @Content(
-                            mediaType = "application/octet-stream",
                             schema = @Schema(type = "string", format = "binary")
                     )
             )

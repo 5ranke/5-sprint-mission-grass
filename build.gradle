@@ -2,7 +2,6 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.5.4'
 	id 'io.spring.dependency-management' version '1.1.7'
-	id 'com.github.node-gradle.node' version '3.5.1'  // 프론트엔드 빌드용 플러그인 추가
 }
 
 group = 'com.sprint.mission'
@@ -43,102 +42,6 @@ dependencies {
 	implementation 'org.mapstruct:mapstruct:1.6.3'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
 }
-
-// ========== 프론트엔드 빌드 설정 ==========
-
-// Node.js 플러그인 설정 (시스템 설치된 Node.js 사용)
-node {
-	download = false  // 시스템에 설치된 Node.js 사용
-	workDir = file("${project.projectDir}/frontend")
-	nodeModulesDir = file("${project.projectDir}/frontend")
-}
-
-// npm build 태스크 (TypeScript 컴파일 + Vite 빌드)
-tasks.register('npmBuild', NpmTask) {
-	dependsOn npmInstall
-	description = "Build frontend application with TypeScript and Vite"
-	workingDir = file("${project.projectDir}/frontend")
-	args = ['run', 'build']
-}
-
-// 빌드된 파일을 static 폴더로 복사 (Vite는 dist 폴더 사용)
-tasks.register('copyFrontend', Copy) {
-	dependsOn npmBuild
-	description = "Copy frontend build to static resources"
-	from "${project.projectDir}/frontend/dist"
-	into "${project.projectDir}/src/main/resources/static"
-
-	// 기존 static 파일들 덮어쓰기
-	duplicatesStrategy = DuplicatesStrategy.INCLUDE
-}
-
-// 스프링 부트 빌드 시 프론트엔드도 함께 빌드
-processResources {
-	dependsOn copyFrontend
-}
-
-// 개발용: 프론트엔드만 빌드 및 복사
-tasks.register('buildFrontend') {
-	dependsOn copyFrontend
-	description = "Build frontend only and copy to static resources"
-}
-
-// 프론트엔드 개발 서버 실행 (개발용)
-tasks.register('npmDev', NpmTask) {
-	dependsOn npmInstall
-	description = "Start frontend development server (runs on http://localhost:5173)"
-	workingDir = file("${project.projectDir}/frontend")
-	args = ['run', 'dev']
-
-	// 개발 서버는 백그라운드로 실행
-	doLast {
-		println "Frontend dev server started at: http://localhost:5173"
-		println "Backend API available at: http://localhost:8080/api"
-	}
-}
-
-// 프론트엔드 린팅 (코드 품질 검사)
-tasks.register('npmLint', NpmTask) {
-	dependsOn npmInstall
-	description = "Run ESLint on frontend code"
-	workingDir = file("${project.projectDir}/frontend")
-	args = ['run', 'lint']
-}
-
-// 클린 태스크에 프론트엔드 정리 추가
-clean {
-	delete "${project.projectDir}/frontend/dist"
-	delete "${project.projectDir}/frontend/node_modules"
-	delete "${project.projectDir}/src/main/resources/static"
-}
-
-// 통합 개발 환경을 위한 커스텀 태스크
-tasks.register('devSetup') {
-	dependsOn npmInstall
-	description = "Setup development environment"
-	doLast {
-		println """
-        ===================================
-        🚀 Development Setup Complete!
-        ===================================
-        
-        Frontend Commands:
-        - ./gradlew npmDev     : Start dev server (http://localhost:5173)
-        - ./gradlew npmLint    : Run code linting
-        - ./gradlew buildFrontend : Build frontend only
-        
-        Full Build:
-        - ./gradlew build      : Build everything (frontend + backend)
-        
-        Backend:
-        - ./gradlew bootRun    : Start Spring Boot (http://localhost:8080)
-        
-        ===================================
-        """
-	}
-}
-
-// ========================================
 
 tasks.named('test') {
 	useJUnitPlatform()

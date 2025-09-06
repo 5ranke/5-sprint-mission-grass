@@ -9,8 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "channels")
@@ -36,7 +36,7 @@ public class Channel extends BaseUpdatableEntity {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private List<Message> messageList = new ArrayList<>();
+    private Set<Message> messageList = new HashSet<>();
 
     @OneToMany(
             mappedBy = "channel",
@@ -44,7 +44,7 @@ public class Channel extends BaseUpdatableEntity {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private List<ReadStatus> readStatusList = new ArrayList<>();
+    private Set<ReadStatus> readStatusList = new HashSet<>();
 
     public Channel(ChannelType type, String name, String description) {
         this.type = type;

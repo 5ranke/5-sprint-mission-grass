@@ -6,7 +6,6 @@ import com.sprint.mission.discodeit.service.BinaryContentService;
 import com.sprint.mission.discodeit.storage.BinaryContentStorage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,7 +35,7 @@ public class BinaryContentController implements BinaryContentApi {
     }
 
     @Override
-    @GetMapping(value = "/{binaryContentId}/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @GetMapping(value = "/{binaryContentId}/download")
     public ResponseEntity<?> download(
             @PathVariable("binaryContentId") UUID binaryContentId) {
         BinaryContentDto binaryContentDto = binaryContentService.find(binaryContentId);

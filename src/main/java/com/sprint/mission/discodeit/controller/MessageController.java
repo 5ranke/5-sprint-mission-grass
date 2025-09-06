@@ -9,7 +9,6 @@ import com.sprint.mission.discodeit.dto.response.PageResponse;
 import com.sprint.mission.discodeit.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -75,13 +74,20 @@ public class MessageController implements MessageApi {
     @GetMapping
     public ResponseEntity<PageResponse<MessageDto>> findAllByChannelId(
             @RequestParam("channelId") UUID channelId,
+            @RequestParam(value = "cursor", required = false) String cursor,
             @PageableDefault(
                     size = 50,
                     page = 0,
-                    sort = "createdAt",
-                    direction = Sort.Direction.DESC
-            ) Pageable pageable) {
-        PageResponse<MessageDto> messages = messageService.findAllByChannelId(channelId, pageable);
+                    sort = "createdAt"
+            ) Pageable pageable){
+
+        int size = pageable.getPageSize();
+
+        // 서비스 레이어에서 검증
+        if (size < 1 || size > 100) {
+            throw new IllegalArgumentException("Size must be between 1 and 100");
+        }
+        PageResponse<MessageDto> messages = messageService.findAllByChannelId(channelId, cursor, size);
         return ResponseEntity.status(HttpStatus.OK).body(messages);
     }
 }

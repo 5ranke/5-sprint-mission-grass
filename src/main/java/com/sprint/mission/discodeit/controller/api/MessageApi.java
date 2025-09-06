@@ -89,6 +89,11 @@ public interface MessageApi {
     })
     ResponseEntity<PageResponse<MessageDto>> findAllByChannelId(
             @Parameter(description = "조회할 Channel ID") UUID channelId,
+            @Parameter(
+                    description = "커서 (다음 페이지를 위한 시작점)",
+                    schema = @Schema(type = "string", format = "date-time")
+            )
+            String cursor,
             @Parameter(description = "페이징 정보") Pageable pageable
     );
 }

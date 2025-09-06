@@ -10,6 +10,14 @@ spring:
 
   # JPA 설정
   jpa:
+    open-in-view: false
+    # 영속성 컨텍스트는 서비스 계층까지만 열려있다.
+    # 기본적으로는 true -> 클라이언트에게 응답이 갈때까지 열려있음
+    # 그래서 Controller/Service/Mapper/직렬화 과정에서 LAZY 로딩 필드에 접근해도 추가 쿼리가 나감
+    # 그러면 편리하지만 DB 커넥션이 오래 점유되기 때문에 OSIV를 끄는 것.
+    # 이제 영속성 컨텍스트는 서비스 계층(@Transactional 범위)까지만 열려 있음.
+    #Controller나 DTO 변환 단계에서 LAZY 필드 접근하면 LazyInitializationException 터짐.
+    #→ “세션이 이미 닫혔는데, 이 연관관계에 접근하려 한다”는 오류.
     hibernate:
       ddl-auto: none #validate      # 테이블 자동 생성/업데이트 옵션
                                     # create, create-drop, update, validate, none
