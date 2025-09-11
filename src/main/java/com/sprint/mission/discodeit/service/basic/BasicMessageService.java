@@ -77,25 +77,6 @@ public class BasicMessageService implements MessageService {
                 .orElseThrow(() -> new NoSuchElementException("Message with id " + messageId + " not found"));
     }
 
-//    @Override
-//    @Transactional(readOnly = true)
-//    public PageResponse<MessageDto> findAllByChannelId(UUID channelId, Pageable pageable) {
-//        Slice<Message> messageSlice = messageRepository.findAllByChannelIdOrderByCreatedAtDesc(channelId, pageable);
-//
-//        List<MessageDto> messageDtos = messageSlice.getContent().stream()
-//                .map(messageMapper::toDto)
-//                .toList();
-//
-//        return new PageResponse<>(
-//                messageDtos,
-//                messageSlice.getNumber(),
-//                messageSlice.getSize(),
-//                messageSlice.hasNext(),
-//                null
-//        );
-//    }
-
-
     @Override
     @Transactional(readOnly = true)
     public PageResponse<MessageDto> findAllByChannelId(UUID channelId, Object cursor, int size) {

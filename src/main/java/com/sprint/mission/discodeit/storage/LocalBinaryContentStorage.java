@@ -31,7 +31,6 @@ public class LocalBinaryContentStorage implements BinaryContentStorage {
     @PostConstruct
     public void init() {
         try {
-            // 루트 디렉토리가 존재하지 않으면 생성
             if (!Files.exists(root)) {
                 Files.createDirectories(root);
                 log.info("루트 디렉토리 생성 완료: {}", root.toAbsolutePath());
@@ -49,10 +48,7 @@ public class LocalBinaryContentStorage implements BinaryContentStorage {
         Path filePath = resolvePath(id);
 
         try {
-            // 파일의 부모 디렉토리가 없으면 생성
             Files.createDirectories(filePath.getParent());
-
-            // 파일 저장
             Files.write(filePath, bytes);
             log.info("파일 저장 완료: {}", filePath.toAbsolutePath());
         } catch (IOException e) {
@@ -89,15 +85,12 @@ public class LocalBinaryContentStorage implements BinaryContentStorage {
                 return ResponseEntity.notFound().build();
             }
 
-            // FileSystemResource 사용 (더 효율적)
             Resource resource = new FileSystemResource(filePath);
 
-            // 파일명 설정 (null이면 ID 사용)
             String fileName = binaryContentDto.fileName() != null ?
                     binaryContentDto.fileName() :
-                    binaryContentDto.id().toString();
+                    "image";
 
-            // Content-Type 설정 (기본값: application/octet-stream)
             String contentType = binaryContentDto.contentType() != null ?
                     binaryContentDto.contentType() :
                     "application/octet-stream";
