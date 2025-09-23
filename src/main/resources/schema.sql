@@ -13,7 +13,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- 기본 테이블들 먼저 생성
 CREATE TABLE binary_contents (
     id            uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-    created_at    timestamptz NOT NULL,
+    created_at    timestamp with time zone NOT NULL,
     file_name     varchar(255) NOT NULL,
     size          bigint NOT NULL,
     content_type  varchar(100) NOT NULL
@@ -22,8 +22,8 @@ CREATE TABLE binary_contents (
 
 CREATE TABLE users (
     id           uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-    created_at   timestamptz NOT NULL,
-    updated_at   timestamptz,
+    created_at   timestamp with time zone NOT NULL,
+    updated_at   timestamp with time zone,
     username     varchar(50)  UNIQUE NOT NULL,
     email        varchar(100) UNIQUE NOT NULL,
     password     varchar(60)  NOT NULL,
@@ -32,8 +32,8 @@ CREATE TABLE users (
 
 CREATE TABLE channels (
     id           uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-    created_at   timestamptz NOT NULL,
-    updated_at   timestamptz,
+    created_at   timestamp with time zone NOT NULL,
+    updated_at   timestamp with time zone,
     name         varchar(100),
     description  varchar(500),
     type         varchar(10) NOT NULL CHECK (type IN ('PUBLIC', 'PRIVATE'))
@@ -41,8 +41,8 @@ CREATE TABLE channels (
 
 CREATE TABLE messages (
     id           uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-    created_at   timestamptz NOT NULL,
-    updated_at   timestamptz,
+    created_at   timestamp with time zone NOT NULL,
+    updated_at   timestamp with time zone,
     content      text,
     channel_id   uuid NOT NULL,
     author_id    uuid
@@ -50,19 +50,19 @@ CREATE TABLE messages (
 
 CREATE TABLE user_statuses (
     id             uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-    created_at     timestamptz NOT NULL,
-    updated_at     timestamptz,
+    created_at     timestamp with time zone NOT NULL,
+    updated_at     timestamp with time zone,
     user_id        uuid UNIQUE NOT NULL,
-    last_active_at timestamptz NOT NULL
+    last_active_at timestamp with time zone NOT NULL
 );
 
 CREATE TABLE read_statuses (
     id            uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-    created_at    timestamptz NOT NULL,
-    updated_at    timestamptz,
+    created_at    timestamp with time zone NOT NULL,
+    updated_at    timestamp with time zone,
     user_id       uuid NOT NULL,
     channel_id    uuid NOT NULL,
-    last_read_at  timestamptz NOT NULL,
+    last_read_at  timestamp with time zone NOT NULL,
     UNIQUE (user_id, channel_id)
 );
 
