@@ -38,10 +38,13 @@ bin/
 ### Mac OS ###
 .DS_Store
 
-### 숨김 파일(.env용) ###
+### Discodeit ###
+.discodeit
+
+### 숨김 파일 ###
 .*
 !.gitignore
 
+
 ### Github Actions ###
 !.github/
-/.github/workflows/test.yml

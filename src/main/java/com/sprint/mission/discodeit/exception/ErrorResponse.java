@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ErrorResponse {
     private final Instant timestamp;
-    private final String code; // VALIDATION_ERROR
+    private final String code;
     private final String message;
     private final Map<String, Object> details;
     private final String exceptionType;
